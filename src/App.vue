@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div class="app">
     <Navbar />
     <router-view />
   </div>
@@ -16,4 +16,9 @@ export default {
 
 <style lang="scss">
 @import "../scss/main.scss";
+
+.app {
+  background-color: #ececec;
+  height: 100%; 
+}
 </style>
