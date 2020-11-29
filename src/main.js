@@ -4,7 +4,6 @@ import router from './router';
 import Buefy from 'buefy';
 import Axios from 'axios';
 import VueAxios from 'vue-axios';
-import 'buefy/dist/buefy.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 // internal icons
