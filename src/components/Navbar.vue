@@ -15,7 +15,7 @@
                 </b-icon>
                 <span style="margin-left:0.5rem">Home</span>
             </b-navbar-item>
-            <b-navbar-item href="/">
+            <b-navbar-item href="/market">
                 <b-icon
                     pack="fas"
                     icon="shopping-bag"
@@ -24,7 +24,7 @@
                 </b-icon>
                 <span style="margin-left:0.5rem">Market</span>
             </b-navbar-item>
-            <b-navbar-item href="#">
+            <b-navbar-item href="/cart">
                  <b-icon
                     pack="fas"
                     icon="shopping-cart"
