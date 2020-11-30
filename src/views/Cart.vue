@@ -7,7 +7,6 @@
                     <div class="content" style="margin-bottom: 0">
                         <b-table
                             :data=" data ? data : []"
-                            :striped="isStriped"
                             :hoverable="true"
                             :loading="isLoading"
                             >
@@ -65,12 +64,43 @@
                     <div class="level">
                         <div class="level-right is-flex" style="width: 100%">
                             <b-button tag="router-link" to="/market" type="is-light" style="margin-right: 12px"><b>Continue Shopping</b></b-button>
-                            <b-button type="is-primary" style="width: 180px"><b>Pay</b></b-button>
+                            <b-button @click="isComponentModalActive = true" type="is-primary" style="width: 180px"><b>Pay</b></b-button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <b-modal 
+            v-model="isComponentModalActive"
+            has-modal-card
+            trap-focus
+            :destroy-on-hide="false">
+            <form action="">
+                <div class="modal-card" style="width: 500px">
+                    <header class="modal-card-head">
+                        <p class="modal-card-title">Pay the Bill</p>
+                    </header>
+                    <section class="modal-card-body">
+                        <b-field label="Total">
+                            <b-input name="form.total" :value="getTotalBill" disabled>
+                            </b-input>
+                        </b-field>
+                        <b-field label="Pay Method">
+                            <b-select v-model="form.method" placeholder="Select a pay method" expanded>
+                                <option value="Cash">Cash</option>
+                                <option value="Transfer">Transfer</option>
+                                <option value="Credit">Credit</option>
+                            </b-select>
+                        </b-field>
+                    </section>
+                    <footer class="modal-card-foot">
+                        <b-button type="is-secondary" @click="isComponentModalActive = false">Cancel</b-button>
+                        <b-button type="is-primary" :disabled="form.method == ''">Continue to Pay</b-button>
+                    </footer>
+                </div>
+            </form>
+        </b-modal>
     </div>
 </template>
 
@@ -86,15 +116,29 @@ export default {
             {'image': 'Jesse', 'description': 'Simmons', 'quantity': '10', 'price': '2000000', 'total' : '2000000' },
         ]
         return {
+            form : {
+                method: '',
+                total: 1000000
+            },
+
+            // model for table
+            quantity: 1,
+
+            // Table
             data,
             isLoading: false,
 
-            // model for table
-            quantity: 1
+            // modal
+            isComponentModalActive: false,
         }
     },
-    computed() {
+    mounted() {
         this.fetchData();
+    },
+    computed: {
+        getTotalBill: function () {
+            return parseInt(this.form.total).toLocaleString('id-ID');
+        }
     },
     methods: {
         fetchData() {
