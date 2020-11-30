@@ -4,7 +4,7 @@
             <h1 class="has-text-centered title">MILLENIAL CATALOG</h1> 
         </div>
         <div class="columns is-multiline" style="padding: 12px 48px">
-            <div class="column is-4">
+            <div class="column is-4" v-for="(product, index) in products" :key="product.id" :index="index">
                 <div class="card">
                     <div class="card-content">
                         <div class="content">
@@ -14,96 +14,6 @@
                             <router-link :to="{ path: '/product/1' }">
                                 <p class="product-name"><strong>Baju Oblong Adidas Kw</strong></p>
                             </router-link>
-                            <p class="price">Rp. 1.000.000</p>
-                            <b-button type="is-primary" expanded>+ Add to Cart</b-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column is-4">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="content">
-                            <figure style="text-align: center; margin: 0">
-                                <img class="image-product" src="../assets/product/product_2.jpg">
-                            </figure>
-                            <p class="product-name"><strong>Baju Oblong Adidas Kw</strong></p>
-                            <p class="price">Rp. 1.000.000</p>
-                            <b-button type="is-primary" expanded>+ Add to Cart</b-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column is-4">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="content">
-                            <figure style="text-align: center; margin: 0">
-                                <img class="image-product" src="../assets/product/product_3.jpg">
-                            </figure>
-                            <p class="product-name"><strong>Baju Oblong Adidas Kw</strong></p>
-                            <p class="price">Rp. 1.000.000</p>
-                            <b-button type="is-primary" expanded>+ Add to Cart</b-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column is-4">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="content">
-                            <figure style="text-align: center; margin: 0">
-                                <img class="image-product" src="../assets/product/product_4.jpg">
-                            </figure>
-                            <p class="product-name"><strong>Baju Oblong Adidas Kw</strong></p>
-                            <p class="price">Rp. 1.000.000</p>
-                            <b-button type="is-primary" expanded>+ Add to Cart</b-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column is-4">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="content">
-                            <figure style="text-align: center; margin: 0">
-                                <img class="image-product" src="../assets/product/product_5.jpg">
-                            </figure>
-                            <p class="product-name"><strong>Baju Oblong Adidas Kw</strong></p>
-                            <p class="price">Rp. 1.000.000</p>
-                            <b-button type="is-primary" expanded>+ Add to Cart</b-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column is-4">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="content">
-                            <figure style="text-align: center; margin: 0">
-                                <img class="image-product" src="../assets/product/product_6.jpg">
-                            </figure>
-                            <p class="product-name"><strong>Baju Oblong Adidas Kw</strong></p>
-                            <p class="price">Rp. 1.000.000</p>
-                            <b-button type="is-primary" expanded>+ Add to Cart</b-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="column is-4">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="content">
-                            <figure style="text-align: center; margin: 0">
-                                <img class="image-product" src="../assets/product/product_7.jpg">
-                            </figure>
-                            <p class="product-name"><strong>Baju Oblong Adidas Kw</strong></p>
                             <p class="price">Rp. 1.000.000</p>
                             <b-button type="is-primary" expanded>+ Add to Cart</b-button>
                         </div>
@@ -120,11 +30,17 @@
 export default {
     data() {
         return {
-            isLoading: false
+            isLoading: false,
+            products: [1, 2, 3, 4, 5, 6, 7, 8]
         }
     },
+    mounted() {
+        this.fetchData();
+    },
     methods: {
-
+        fetchData() {
+            // For fetch data product
+        }
     }
 }
 </script>

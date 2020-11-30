@@ -93,7 +93,13 @@ export default {
             quantity: 1
         }
     },
+    computed() {
+        this.fetchData();
+    },
     methods: {
+        fetchData() {
+            // For fetch data cart 
+        },
         propsDeleteItem(item) {
             this.$buefy.dialog.confirm({
                 title: 'Delete this item from cart?',
@@ -108,7 +114,7 @@ export default {
             })
         },
         deleteFromCart(item) {
-            alert(item);
+            alert(item); // for delete item from cart
         }
     }
 }

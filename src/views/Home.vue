@@ -18,7 +18,7 @@
                             <div class="hero-body" :style="{ backgroundImage: 'url(' + require('../assets/carousel/'+ carousel.image +'.jpg') + ')', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', paddingLeft: '60px' }">
                                 <h1 class="title font" :style="{ marginBottom: 0, color: `${carousel.color}` }">{{ carousel.title.toUpperCase() }}</h1>
                                 <h1 class="content font" :style="{ fontSize: '50px', fontWeight: 700, color: `${carousel.color}`}">{{ carousel.content.toUpperCase() }}</h1>
-                                <b-button type="is-primary">SHOP NOW</b-button>
+                                <b-button tag="router-link" to="/market" type="is-primary">SHOP NOW</b-button>
                             </div>
                         </section>
                     </b-carousel-item>
