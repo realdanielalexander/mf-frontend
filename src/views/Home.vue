@@ -24,33 +24,33 @@
                     </b-carousel-item>
                 </b-carousel>
 
-                <div class="columns is-multiline is-vcentered" style="padding: 72px 72px">
+                <div class="columns is-multiline" style="padding: 5rem">
                     <div class="column is-one-quarter has-text-centered">
                         <b-icon pack="fas" icon="gem" size="is-large">
                         </b-icon>
                         <p style="font-size: 25px"><strong>Unique Design</strong></p>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer </p>
+                        <p>We Provide newest and latest trend design in the world to you. You can access it easily within your hands. </p>
                     </div>
 
                     <div class="column is-one-quarter has-text-centered">
                         <b-icon pack="fas" icon="rocket" size="is-large">
                         </b-icon>
                         <p style="font-size: 25px"><strong>Service Innovation</strong></p>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer </p>
+                        <p>We never stop inventing all unique and reasonable design in every session througout the year. Not only for retaliate the customer but also participate in leading world fashion trend.</p>
                     </div>
 
                     <div class="column is-one-quarter has-text-centered">
                         <b-icon pack="fas" icon="desktop" size="is-large">
                         </b-icon>
                         <p style="font-size: 25px"><strong>Digital Strategy</strong></p>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer </p>
+                        <p>Utilize world class tech in developing fashion, gather data and implement user's request to keep improving. </p>
                     </div>
 
                     <div class="column is-one-quarter has-text-centered">
                         <b-icon pack="fas" icon="pencil-alt" size="is-large">
                         </b-icon>
                         <p style="font-size: 25px"><strong>Brand Identity</strong></p>
-                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer </p>
+                        <p>Give courage and confident to every user that trust us, aim to be world number 1 fashion company.</p>
                     </div>
                 </div>
             </div>
