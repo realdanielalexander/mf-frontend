@@ -51,7 +51,7 @@ export default {
     },
     methods: {
         async fetchData() {
-            this.product = await axios.get(`http://103.27.207.93:8080/products/${this.productId}`);
+            this.product = await axios.get(`/products/${this.productId}`);
         },
         viewDesign3D(id) {
             var showcaseContainer = document.getElementById("showcaseContainer");

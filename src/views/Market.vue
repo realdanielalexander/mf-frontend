@@ -43,7 +43,7 @@ export default {
     },
       methods: {
         async fetchData() {
-            this.products = await axios.get('http://103.27.207.93:8080/products');
+            this.products = await axios.get('/products');
         },
     }
 }
