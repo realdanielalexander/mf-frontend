@@ -11,7 +11,7 @@
         <b-select
           placeholder="Select a customer"
           icon="user"
-          @select="onSelect()"
+          v-on:change="onSelect()"
           v-model="username"
         >
           <option
@@ -97,8 +97,7 @@ export default {
       this.customers = res.data;
     },
     onSelect(value) {
-      this.username = value;
-      console.log(this.username);
+      console.log(value);
     },
   },
 };
