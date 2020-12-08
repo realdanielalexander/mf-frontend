@@ -1,7 +1,7 @@
 <template>
     <div class="columns is-vcentered is-flex" style="flex-direction: column; min-height: 100vh">
         <div class="column">
-            <h1 class="has-text-centered title">MILLENIAL CATALOG</h1> 
+            <h1 class="has-text-centered title">MILLENIAL CATALOG</h1>
         </div>
         <div class="columns is-multiline" style="padding: 12px 48px">
             <div class="column is-4" v-for="(product, index) in products" :key="product.id" :index="index">
@@ -43,7 +43,8 @@ export default {
     },
       methods: {
         async fetchData() {
-            this.products = await axios.get('/products');
+            const res = await axios.get('/products');
+            this.products = res.data
         },
     }
 }

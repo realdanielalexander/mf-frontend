@@ -51,7 +51,8 @@ export default {
     },
     methods: {
         async fetchData() {
-            this.product = await axios.get(`/products/${this.productId}`);
+            const res = await axios.get(`/products/${this.productId}`);
+            this.product = res.data;
         },
         viewDesign3D(id) {
             var showcaseContainer = document.getElementById("showcaseContainer");
