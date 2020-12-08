@@ -1,12 +1,12 @@
 <template>
     <div class="columns is-vcentered is-flex" style="flex-direction: column; min-height: 100vh">
         <div class="column">
-            <h1 class="has-text-centered title">MILLENIAL CATALOG</h1>
+            <h1 class="has-text-centered title">WISH LIST CATALOG</h1>
         </div>
         <div>
                   <b-field>
-                    <b-select placeholder="Select a customer" icon="user" value="user" @change="onSelect" v-model="user">
-                        <option  v-for="(customer) in customers" :key="customer.id" value="customer.name">{{customer.name}}</option>
+                    <b-select placeholder="Select a customer" icon="user" value="user" @onSelect="onSelect" >
+                        <option  v-for="(customer,index) in customers" :key="customer.id" :index="index" value="customer.id">{{customer.name}}</option>
                     </b-select>
                 </b-field>
                 </div>
@@ -64,8 +64,7 @@ export default {
              this.customers = res.data;
         },
          onSelect(value) {
-            this.user= value;
-            console.log(this.user);
+            this.user = value;
         }
     }
 }

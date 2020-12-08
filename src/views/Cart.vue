@@ -4,6 +4,13 @@
             <div class="card">
                 <div class="card-content">
                     <h1 class="title cart-header"><b>SHOOPING CART</b></h1>
+                      <div>
+                  <b-field>
+                    <b-select placeholder="Select a customer" icon="user" value="user" @onSelect="onSelect" >
+                        <option  v-for="(customer,index) in customers" :key="customer.id" :index="index" value="customer.id">{{customer.name}}</option>
+                    </b-select>
+                </b-field>
+                </div>
                     <div class="content" style="margin-bottom: 0">
                         <b-table
                             :data=" data ? data : []"
@@ -105,6 +112,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         const data = [
@@ -130,10 +139,15 @@ export default {
 
             // modal
             isComponentModalActive: false,
+            
+            // customers
+            customers:[],
+            user:""
         }
     },
     mounted() {
         this.fetchData();
+        this.fetchCustomer();
     },
     computed: {
         getTotalBill: function () {
@@ -142,7 +156,7 @@ export default {
     },
     methods: {
         fetchData() {
-            // For fetch data cart 
+            // For fetch data cart
         },
         propsDeleteItem(item) {
             this.$buefy.dialog.confirm({
@@ -159,6 +173,13 @@ export default {
         },
         deleteFromCart(item) {
             alert(item); // for delete item from cart
+        },
+         async fetchCustomer() {
+             const res = await axios.get('/customers');
+             this.customers = res.data;
+        },
+         onSelect(value) {
+            this.user = value;
         }
     }
 }

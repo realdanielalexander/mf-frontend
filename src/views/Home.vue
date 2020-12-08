@@ -60,6 +60,7 @@
 
 <script>
 export default {
+    name:'home',
   data() {
     return {
         animated: "slide",
