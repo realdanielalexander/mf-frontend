@@ -29,29 +29,21 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
+    mounted(){
+        this.fetchData();
+    },
     data() {
         return {
             isLoading: false,
-            products: [
-                {'id' : 36805, 'name' : 'Baju Abal-Abal', 'image_url': 'assets/product/set_1.png', 'price' : 1000000},
-                {'id' : 38266, 'name' : 'Baju Super Abal', 'image_url': 'assets/product/set_2.png', 'price' : 1500000},
-                {'id' : 38317, 'name' : 'Baju Super KW', 'image_url': 'assets/product/set_3.png', 'price' : 1250000},
-                {'id' : 37283, 'name' : 'Baju Super Ampas', 'image_url': 'assets/product/set_4.png', 'price' : 2000000},
-                {'id' : 37682, 'name' : 'Baju Super Jelek', 'image_url': 'assets/product/set_5.png', 'price' : 2500000},
-                {'id' : 38100, 'name' : 'Baju Pasaran', 'image_url': 'assets/product/set_6.png', 'price' : 1750000},
-                {'id' : 38063, 'name' : 'Baju Abang Jagp', 'image_url': 'assets/product/set_7.png', 'price' : 3000000},
-                {'id' : 38085, 'name' : 'Baju Anak Gelo', 'image_url': 'assets/product/set_8.png', 'price' : 3500000},
-                {'id' : 38687, 'name' : 'Baju Kaya Banget', 'image_url': 'assets/product/set_9.png', 'price' : 4000000},
-            ],
+            products: [],
         }
     },
-    mounted() {
-        this.fetchData();
-    },
-    methods: {
-        fetchData() {
-            // For fetch data product
+      methods: {
+        async fetchData() {
+            this.products = await axios.get('http://103.27.207.93:8080/products');
         },
     }
 }
