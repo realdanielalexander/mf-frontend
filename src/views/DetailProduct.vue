@@ -11,7 +11,7 @@
             <p>Rp. {{ parseInt(product.price).toLocaleString('id-ID') }}</p>
             <hr style="background-color: hsl(0, 0%, 86%); margin: 12px 0">  
             <p class="description">
-                Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                {{product.description}}
             </p>
             <hr style="background-color: hsl(0, 0%, 86%); margin: 12px 0">
             <div class="is-flex" style="flex-direction: row">
@@ -35,11 +35,13 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     data() {
         return {
             global: {},
-            product: {'id' : 36805, 'name' : 'Baju Abal-Abal', 'image_url': 'assets/product/set_1.png', 'price' : 1000000},
+            product: null,
             productId: ''
         }
     },
@@ -48,8 +50,8 @@ export default {
         this.fetchData();
     },
     methods: {
-        fetchData() {
-            //for get data product
+        async fetchData() {
+            this.product = await axios.get(`http://103.27.207.93:8080/products/${this.productId}`);
         },
         viewDesign3D(id) {
             var showcaseContainer = document.getElementById("showcaseContainer");
