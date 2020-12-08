@@ -25,9 +25,11 @@
                             <p class="price">
                                 Rp. {{ parseInt(product.price).toLocaleString('id-Id') }}
                             </p>
-                            <b-button type="is-primary" expanded>+ Add to Cart</b-button>
-                            <br>
-                            <b-button type="is-info" expanded>+ Add Wish List</b-button>
+                            <div>
+                                <b-numberinput  min="1" size="is-small" controls-position="compact"></b-numberinput>
+                                <b-button type="is-primary" expanded>+ Add to Cart</b-button>
+                            </div>
+                        
                         </div>
                     </div>
                 </div>
