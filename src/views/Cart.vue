@@ -1,197 +1,289 @@
 <template>
-    <div class="columns is-centered" style="align-items: center; min-height: 100vh">
-        <div class="column is-four-fifths">
-            <div class="card">
-                <div class="card-content">
-                    <h1 class="title cart-header"><b>SHOOPING CART</b></h1>
-                      <div>
-                  <b-field>
-                    <b-select placeholder="Select a customer" icon="user" value="user" @onSelect="onSelect" >
-                        <option  v-for="(customer,index) in customers" :key="customer.id" :index="index" value="customer.id">{{customer.name}}</option>
-                    </b-select>
+  <div
+    class="columns is-centered"
+    style="align-items: center; min-height: 100vh"
+  >
+    <div class="column is-four-fifths">
+      <div class="card">
+        <div class="card-content">
+          <h1 class="title cart-header"><b>SHOOPING CART</b></h1>
+          <div>
+            <b-field>
+              <b-select
+                placeholder="Select a customer"
+                icon="user"
+                value="user"
+                v-model="username"
+              >
+                <option
+                  v-for="customer in customers"
+                  :key="customer.id"
+                  :value="customer.id"
+                  >{{ customer.name }}</option
+                >
+              </b-select>
+            </b-field>
+          </div>
+          <div class="content" style="margin-bottom: 0">
+            <b-table
+              :data="data ? data : []"
+              :hoverable="true"
+              :loading="isLoading"
+            >
+              <b-table-column
+                field="id"
+                label="No"
+                width="40"
+                numeric
+                v-slot="props"
+              >
+                {{ props.index + 1 }}
+              </b-table-column>
+
+              <b-table-column field="image" label="Image" v-slot="props">
+                {{ props.row.first_name }}
+              </b-table-column>
+
+              <b-table-column
+                field="description"
+                label="Description"
+                v-slot="props"
+              >
+                {{ props.row.description }}
+              </b-table-column>
+
+              <b-table-column field="quantity" label="Quantity" width="125">
+                <b-field>
+                  <b-numberinput
+                    v-model="quantity"
+                    min="1"
+                    size="is-small"
+                    controls-position="compact"
+                  >
+                  </b-numberinput>
                 </b-field>
-                </div>
-                    <div class="content" style="margin-bottom: 0">
-                        <b-table
-                            :data=" data ? data : []"
-                            :hoverable="true"
-                            :loading="isLoading"
-                            >
+              </b-table-column>
 
-                            <b-table-column field="id" label="No" width="40" numeric v-slot="props">
-                                {{ props.index + 1}}
-                            </b-table-column>
+              <b-table-column field="price" label="Price" v-slot="props">
+                Rp. {{ parseInt(props.row.price).toLocaleString('id-ID') }}
+              </b-table-column>
 
-                            <b-table-column field="image" label="Image" v-slot="props">
-                                {{ props.row.first_name }}
-                            </b-table-column>
+              <b-table-column field="total" label="Total" v-slot="props">
+                Rp. {{ parseInt(props.row.total).toLocaleString('id-ID') }}
+              </b-table-column>
 
-                            <b-table-column field="description" label="Description" v-slot="props">
-                                {{ props.row.description}}
-                            </b-table-column>
+              <b-table-column field="action" label="Action" v-slot="props">
+                <b-button
+                  @click="propsDeleteItem(props.row)"
+                  type="is-danger"
+                  icon-right="trash"
+                />
+              </b-table-column>
 
-                            <b-table-column field="quantity" label="Quantity" width="125">
-                                <b-field>
-                                    <b-numberinput v-model="quantity" min="1" size="is-small" controls-position="compact">
-                                    </b-numberinput>
-                                </b-field>
-                            </b-table-column>
+              <template slot="empty">
+                <section class="section">
+                  <div class="content has-text-grey has-text-centered">
+                    <p>Cart is empty!</p>
+                  </div>
+                </section>
+              </template>
+            </b-table>
+          </div>
 
-                            <b-table-column field="price" label="Price" v-slot="props">
-                               Rp. {{ parseInt(props.row.price).toLocaleString('id-ID') }}
-                            </b-table-column>
+          <hr style="background-color: black; margin: 24px 0" />
 
-                            <b-table-column field="total" label="Total" v-slot="props">
-                               Rp. {{ parseInt(props.row.total).toLocaleString('id-ID') }}
-                            </b-table-column>
+          <div class="level is-flex" style="padding: 0 24px">
+            <p><strong>Total All Item</strong></p>
+            <p><strong>IDR Rp. 12.000.000</strong></p>
+          </div>
 
-                            <b-table-column field="action" label="Action" v-slot="props">
-                               <b-button @click="propsDeleteItem(props.row)" type="is-danger" icon-right="trash" />
-                            </b-table-column>
+          <hr style="background-color: black; margin: 24px 0" />
 
-                            <template slot="empty">
-                                <section class="section">
-                                    <div class="content has-text-grey has-text-centered">
-                                        <p>Cart is empty!</p>
-                                    </div>
-                                </section>
-                            </template>
-                        </b-table>
-                    </div>
-
-                    <hr style="background-color: black; margin: 24px 0">
-
-                    <div class="level is-flex" style="padding: 0 24px">
-                        <p><strong>Total All Item</strong></p>
-                        <p><strong>IDR Rp. 12.000.000</strong></p>
-                    </div>
-
-                    <hr style="background-color: black; margin: 24px 0">
-
-                    <div class="level">
-                        <div class="level-right is-flex" style="width: 100%">
-                            <b-button tag="router-link" to="/market" type="is-light" style="margin-right: 12px"><b>Continue Shopping</b></b-button>
-                            <b-button @click="isComponentModalActive = true" type="is-primary" style="width: 180px"><b>Pay</b></b-button>
-                        </div>
-                    </div>
-                </div>
+          <div class="level">
+            <div class="level-right is-flex" style="width: 100%">
+              <b-button
+                tag="router-link"
+                to="/market"
+                type="is-light"
+                style="margin-right: 12px"
+                ><b>Continue Shopping</b></b-button
+              >
+              <b-button
+                @click="isComponentModalActive = true"
+                type="is-primary"
+                style="width: 180px"
+                ><b>Pay</b></b-button
+              >
             </div>
+          </div>
         </div>
-
-        <b-modal 
-            v-model="isComponentModalActive"
-            has-modal-card
-            trap-focus
-            :destroy-on-hide="false">
-            <form action="">
-                <div class="modal-card" style="width: 500px">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title">Pay the Bill</p>
-                    </header>
-                    <section class="modal-card-body">
-                        <b-field label="Total">
-                            <b-input name="form.total" :value="getTotalBill" disabled>
-                            </b-input>
-                        </b-field>
-                        <b-field label="Pay Method">
-                            <b-select v-model="form.method" placeholder="Select a pay method" expanded>
-                                <option value="Cash">Cash</option>
-                                <option value="Transfer">Transfer</option>
-                                <option value="Credit">Credit</option>
-                            </b-select>
-                        </b-field>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <b-button type="is-secondary" @click="isComponentModalActive = false">Cancel</b-button>
-                        <b-button type="is-primary" :disabled="form.method == ''">Continue to Pay</b-button>
-                    </footer>
-                </div>
-            </form>
-        </b-modal>
+      </div>
     </div>
+
+    <b-modal
+      v-model="isComponentModalActive"
+      has-modal-card
+      trap-focus
+      :destroy-on-hide="false"
+    >
+      <form action="">
+        <div class="modal-card" style="width: 500px">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Pay the Bill</p>
+          </header>
+          <section class="modal-card-body">
+            <b-field label="Total">
+              <b-input name="form.total" :value="getTotalBill" disabled>
+              </b-input>
+            </b-field>
+            <b-field label="Pay Method">
+              <b-select
+                v-model="form.method"
+                placeholder="Select a pay method"
+                expanded
+              >
+                <option value="Cash">Cash</option>
+                <option value="Transfer">Transfer</option>
+                <option value="Credit">Credit</option>
+              </b-select>
+            </b-field>
+          </section>
+          <footer class="modal-card-foot">
+            <b-button
+              type="is-secondary"
+              @click="isComponentModalActive = false"
+              >Cancel</b-button
+            >
+            <b-button type="is-primary" :disabled="form.method == ''"
+              >Continue to Pay</b-button
+            >
+          </footer>
+        </div>
+      </form>
+    </b-modal>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
 
 export default {
-    data() {
-        const data = [
-            {'image': 'Jesse', 'description': 'Simmons', 'quantity': '10', 'price': '2000000', 'total' : '2000000' },
-            {'image': 'Jesse', 'description': 'Simmons', 'quantity': '10', 'price': '2000000', 'total' : '2000000' },
-            {'image': 'Jesse', 'description': 'Simmons', 'quantity': '10', 'price': '2000000', 'total' : '2000000' },
-            {'image': 'Jesse', 'description': 'Simmons', 'quantity': '10', 'price': '2000000', 'total' : '2000000' },
-            {'image': 'Jesse', 'description': 'Simmons', 'quantity': '10', 'price': '2000000', 'total' : '2000000' },
-            {'image': 'Jesse', 'description': 'Simmons', 'quantity': '10', 'price': '2000000', 'total' : '2000000' },
-        ]
-        return {
-            form : {
-                method: '',
-                total: 1000000
-            },
+  data() {
+    const data = [
+      {
+        image: 'Jesse',
+        description: 'Simmons',
+        quantity: '10',
+        price: '2000000',
+        total: '2000000',
+      },
+      {
+        image: 'Jesse',
+        description: 'Simmons',
+        quantity: '10',
+        price: '2000000',
+        total: '2000000',
+      },
+      {
+        image: 'Jesse',
+        description: 'Simmons',
+        quantity: '10',
+        price: '2000000',
+        total: '2000000',
+      },
+      {
+        image: 'Jesse',
+        description: 'Simmons',
+        quantity: '10',
+        price: '2000000',
+        total: '2000000',
+      },
+      {
+        image: 'Jesse',
+        description: 'Simmons',
+        quantity: '10',
+        price: '2000000',
+        total: '2000000',
+      },
+      {
+        image: 'Jesse',
+        description: 'Simmons',
+        quantity: '10',
+        price: '2000000',
+        total: '2000000',
+      },
+    ];
+    return {
+      form: {
+        method: '',
+        total: 1000000,
+      },
 
-            // model for table
-            quantity: 1,
+      // model for table
+      quantity: 1,
 
-            // Table
-            data,
-            isLoading: false,
+      // Table
+      data,
+      isLoading: false,
 
-            // modal
-            isComponentModalActive: false,
-            
-            // customers
-            customers:[],
-            user:""
-        }
+      // modal
+      isComponentModalActive: false,
+
+      // customers
+      customers: [],
+      username: '',
+    };
+  },
+  mounted() {
+    this.fetchData();
+    this.fetchCustomer();
+  },
+  computed: {
+    getTotalBill: function() {
+      return parseInt(this.form.total).toLocaleString('id-ID');
     },
-    mounted() {
-        this.fetchData();
-        this.fetchCustomer();
+  },
+  methods: {
+    fetchData() {
+      // For fetch data cart
     },
-    computed: {
-        getTotalBill: function () {
-            return parseInt(this.form.total).toLocaleString('id-ID');
-        }
+    propsDeleteItem(item) {
+      this.$buefy.dialog.confirm({
+        title: 'Delete this item from cart?',
+        message:
+          'Item that has been <b>deleted</b> will not be count as your item again!',
+        type: 'is-danger',
+        hasIcon: true,
+        icon: 'times-circle',
+        iconPack: 'fa',
+        cancelText: 'No',
+        confirmText: 'Yes',
+        onConfirm: () => this.deleteFromCart(item),
+      });
     },
-    methods: {
-        fetchData() {
-            // For fetch data cart
-        },
-        propsDeleteItem(item) {
-            this.$buefy.dialog.confirm({
-                title: 'Delete this item from cart?',
-                message: 'Item that has been <b>deleted</b> will not be count as your item again!',
-                type: 'is-danger',
-                hasIcon: true,
-                icon: 'times-circle',
-                iconPack: 'fa',
-                cancelText: "No",
-                confirmText: "Yes",
-                onConfirm: () => this.deleteFromCart(item),
-            })
-        },
-        deleteFromCart(item) {
-            alert(item); // for delete item from cart
-        },
-         async fetchCustomer() {
-             const res = await axios.get('/customers');
-             this.customers = res.data;
-        },
-         onSelect(value) {
-            this.user = value;
-        }
-    }
-}
+    deleteFromCart(item) {
+      alert(item); // for delete item from cart
+    },
+    async fetchCustomer() {
+      const res = await axios.get('/customers');
+      this.customers = res.data;
+    },
+  },
+  watch: {
+    username: function() {
+      console.log(this.username);
+    },
+  },
+};
 </script>
 
 <style scoped>
 .column {
-    padding-top: 24px;
+  padding-top: 24px;
 }
 
 .cart-header {
-    border-bottom: 1px solid black;
-    padding-bottom: 24px;
+  border-bottom: 1px solid black;
+  padding-bottom: 24px;
 }
 </style>

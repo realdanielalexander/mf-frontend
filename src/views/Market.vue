@@ -84,7 +84,6 @@ export default {
       products: [],
       customers: [],
       username: '',
-      id: 0,
     };
   },
   methods: {
@@ -95,15 +94,6 @@ export default {
     async fetchCustomer() {
       const res = await axios.get('/customers');
       this.customers = res.data;
-    },
-    onSelect(value) {
-      console.log(value);
-    },
-  },
-  watch: {
-    username: function() {
-      this.id = this.username;
-      console.log(this.id);
     },
   },
 };
