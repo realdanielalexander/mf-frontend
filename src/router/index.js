@@ -10,6 +10,8 @@ import Cart from '../views/Cart.vue';
 import DetailProduct from '../views/DetailProduct.vue';
 import Signup from '../views/Signup.vue';
 import Wish from '../views/Wish.vue';
+import Transactions from '../views/Transactions.vue';
+import DetailTransaction from '../views/DetailTransaction.vue';
 
 const routes = [
   {
@@ -41,6 +43,16 @@ const routes = [
     path: '/wishlist',
     name: 'wishlist',
     component: Wish,
+  },
+  {
+    path: '/transactions',
+    name: 'transactions',
+    component: Transactions,
+  },
+  {
+    path: '/transactions/:transactionId',
+    name: 'detailTransaction',
+    component: DetailTransaction,
   },
 ];
 

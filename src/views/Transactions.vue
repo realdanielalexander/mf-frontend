@@ -6,7 +6,7 @@
     <div class="column is-four-fifths">
       <div class="card">
         <div class="card-content">
-          <h1 class="title cart-header"><b>Shopping Cart</b></h1>
+          <h1 class="title cart-header"><b>Transaction History</b></h1>
           <div>
             <!-- <b-field>
               <b-select
@@ -42,43 +42,8 @@
                 {{ props.index + 1 }}
               </b-table-column>
 
-              <b-table-column field="Name" label="Name" v-slot="props">
-                {{ props.row.name }}
-              </b-table-column>
-
-              <b-table-column
-                field="description"
-                label="Description"
-                width="200"
-                v-slot="props"
-              >
-                {{ props.row.description }}
-              </b-table-column>
-
-              <b-table-column field="image" label="Image" v-slot="props">
-                <figure style="text-align: center; margin: 0">
-                  <img
-                    class="image-product"
-                    :src="require(`@/${props.row.image_url}`)"
-                    width="200px"
-                  />
-                </figure>
-              </b-table-column>
-
-              <b-table-column field="quantity" label="Quantity" width="125">
-                <b-field>
-                  <b-numberinput
-                    v-model="quantity"
-                    min="1"
-                    size="is-small"
-                    controls-position="compact"
-                  >
-                  </b-numberinput>
-                </b-field>
-              </b-table-column>
-
-              <b-table-column field="price" label="Price" v-slot="props">
-                Rp. {{ parseInt(props.row.price).toLocaleString("id-ID") }}
+              <b-table-column field="Date" label="Date" v-slot="props">
+                {{ formatDate(props.row.date) }}
               </b-table-column>
 
               <b-table-column field="total" label="Total" v-slot="props">
@@ -86,11 +51,9 @@
               </b-table-column>
 
               <b-table-column field="action" label="Action" v-slot="props">
-                <b-button
-                  @click="propsDeleteItem(props.row)"
-                  type="is-danger"
-                  icon-right="trash"
-                />
+                <router-link :to="{ path: '/transactions/' + props.row.id }">
+                  <b-button type="is-white" icon-right="search" />
+                </router-link>
               </b-table-column>
 
               <template slot="empty">
@@ -105,13 +68,6 @@
 
           <hr style="background-color: black; margin: 24px 0" />
 
-          <div class="level is-flex" style="padding: 0 24px">
-            <p><strong>Total All Item</strong></p>
-            <p><strong>IDR Rp. 12.000.000</strong></p>
-          </div>
-
-          <hr style="background-color: black; margin: 24px 0" />
-
           <div class="level">
             <div class="level-right is-flex" style="width: 100%">
               <b-button
@@ -120,12 +76,6 @@
                 type="is-light"
                 style="margin-right: 12px"
                 ><b>Continue Shopping</b></b-button
-              >
-              <b-button
-                @click="isComponentModalActive = true"
-                type="is-primary"
-                style="width: 180px"
-                ><b>Pay</b></b-button
               >
             </div>
           </div>
@@ -182,6 +132,7 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 
 export default {
   data() {
@@ -218,9 +169,8 @@ export default {
   },
   methods: {
     async fetchData() {
-      console.log("test");
       try {
-        const res = await axios.get("/carts/1");
+        const res = await axios.get("/transactions/1");
         this.data = res.data;
       } catch (error) {
         this.data = [];
@@ -239,6 +189,9 @@ export default {
         confirmText: "Yes",
         onConfirm: () => this.deleteFromCart(item),
       });
+    },
+    formatDate(date) {
+      return moment(String(date)).format("DD MMMM YYYY");
     },
     async deleteFromCart(item) {
       await axios.delete("/carts/1/" + item.id);

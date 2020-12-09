@@ -13,7 +13,7 @@
       <p class="title-product">
         <strong>{{ product.name }}</strong>
       </p>
-      <p>Rp. {{ parseInt(product.price).toLocaleString('id-ID') }}</p>
+      <p>Rp. {{ parseInt(product.price).toLocaleString("id-ID") }}</p>
       <hr style="background-color: hsl(0, 0%, 86%); margin: 12px 0" />
       <p class="description">
         {{ product.description }}
@@ -27,8 +27,12 @@
           expanded
           ><strong>View</strong></b-button
         >
-        <b-button type="is-primary" expanded
+        <b-button class="mr-3" type="is-primary" expanded @click="addToCart()"
           ><strong>+ Add to Cart</strong></b-button
+        >
+
+        <b-button type="is-danger" expanded @click="addToCart()"
+          ><strong>+ Add to Wishlist</strong></b-button
         >
       </div>
     </div>
@@ -36,7 +40,7 @@
     <div
       id="showcaseContainer"
       class="lity-container"
-      style="width:100vw; position: fixed; display: none"
+      style="width: 100vw; position: fixed; display: none"
     >
       <div class="lity-content">
         <button
@@ -47,14 +51,14 @@
         >
           X
         </button>
-        <div class="lity-iframe-container" style="max-height: 536px;">
+        <div class="lity-iframe-container" style="max-height: 536px">
           <iframe
             id="showcase"
             frameborder="0"
             allowfullscreen
             src="https://dsign4you.com/3d/viewer/?q=hq&design=36805"
             __idm_frm__="280"
-            style="width:100vw; height: 500px"
+            style="width: 100vw; height: 500px"
           >
           </iframe>
         </div>
@@ -64,14 +68,14 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   data() {
     return {
       global: {},
       product: null,
-      productId: '',
+      productId: "",
     };
   },
   mounted() {
@@ -83,20 +87,35 @@ export default {
       const res = await axios.get(`/products/${this.productId}`);
       this.product = res.data;
     },
+    async addToCart() {
+      console.log(this.productId);
+
+      console.log({
+        customer_id: 1,
+        product_id: parseInt(this.productId),
+      });
+      await axios.post(`/carts`, {
+        customer_id: 1,
+        product_id: parseInt(this.productId),
+      });
+    },
     viewDesign3D(id) {
-      var showcaseContainer = document.getElementById('showcaseContainer');
-      document.getElementById('showcase').src =
-        'https://dsign4you.com/3d/viewer/?q=hq&design=' + id;
-      if (showcaseContainer.style.display === 'none') {
-        showcaseContainer.style.display = 'block';
+      console.log("3D");
+      console.log(id);
+
+      var showcaseContainer = document.getElementById("showcaseContainer");
+      document.getElementById("showcase").src =
+        "https://dsign4you.com/3d/viewer/?q=hq&design=" + id;
+      if (showcaseContainer.style.display === "none") {
+        showcaseContainer.style.display = "block";
       }
     },
     toggle() {
-      var showcaseContainer = document.getElementById('showcaseContainer');
-      if (showcaseContainer.style.display === 'none') {
-        showcaseContainer.style.display = 'block';
+      var showcaseContainer = document.getElementById("showcaseContainer");
+      if (showcaseContainer.style.display === "none") {
+        showcaseContainer.style.display = "block";
       } else {
-        showcaseContainer.style.display = 'none';
+        showcaseContainer.style.display = "none";
       }
     },
   },

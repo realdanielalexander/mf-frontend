@@ -6,7 +6,9 @@
     <div class="column is-four-fifths">
       <div class="card">
         <div class="card-content">
-          <h1 class="title cart-header"><b>Shopping Cart</b></h1>
+          <h1 class="title cart-header">
+            <b>{{ "Transaction " + formatDate(this.data.date) }}</b>
+          </h1>
           <div>
             <!-- <b-field>
               <b-select
@@ -28,7 +30,7 @@
           </div>
           <div class="content" style="margin-bottom: 0">
             <b-table
-              :data="data ? data : []"
+              :data="data.products ? data.products : []"
               :hoverable="true"
               :loading="isLoading"
             >
@@ -49,20 +51,9 @@
               <b-table-column
                 field="description"
                 label="Description"
-                width="200"
                 v-slot="props"
               >
                 {{ props.row.description }}
-              </b-table-column>
-
-              <b-table-column field="image" label="Image" v-slot="props">
-                <figure style="text-align: center; margin: 0">
-                  <img
-                    class="image-product"
-                    :src="require(`@/${props.row.image_url}`)"
-                    width="200px"
-                  />
-                </figure>
               </b-table-column>
 
               <b-table-column field="quantity" label="Quantity" width="125">
@@ -85,13 +76,13 @@
                 Rp. {{ parseInt(props.row.total).toLocaleString("id-ID") }}
               </b-table-column>
 
-              <b-table-column field="action" label="Action" v-slot="props">
+              <!-- <b-table-column field="action" label="Action" v-slot="props">
                 <b-button
                   @click="propsDeleteItem(props.row)"
                   type="is-danger"
                   icon-right="trash"
                 />
-              </b-table-column>
+              </b-table-column> -->
 
               <template slot="empty">
                 <section class="section">
@@ -182,6 +173,7 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 
 export default {
   data() {
@@ -220,11 +212,14 @@ export default {
     async fetchData() {
       console.log("test");
       try {
-        const res = await axios.get("/carts/1");
+        const res = await axios.get("/transactions/1/3");
         this.data = res.data;
       } catch (error) {
         this.data = [];
       }
+    },
+    formatDate(date) {
+      return moment(String(date)).format("DD MMMM YYYY");
     },
     propsDeleteItem(item) {
       this.$buefy.dialog.confirm({
