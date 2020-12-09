@@ -167,11 +167,11 @@
               @click="isComponentModalActive = false"
               >Cancel</b-button
             >
-            <<<<<<< HEAD <b-button type="is-primary" :disabled="form.method ==
-            ''" @click="postTransaction()" =======
-            <b-button type="is-primary" :disabled="form.method == ''"
-              >>>>>>> 9620584c928f5bd86382eb28a6012c61f715ae57 >Continue to
-              Pay</b-button
+            <b-button
+              type="is-primary"
+              :disabled="form.method == ''"
+              @click="postTransaction()"
+              >Continue to Pay</b-button
             >
           </footer>
         </div>
@@ -185,60 +185,10 @@ import axios from "axios";
 
 export default {
   data() {
-<<<<<<< HEAD
     const data = [];
     return {
       form: {
         method: "",
-=======
-    const data = [
-      {
-        image: 'Jesse',
-        description: 'Simmons',
-        quantity: '10',
-        price: '2000000',
-        total: '2000000',
-      },
-      {
-        image: 'Jesse',
-        description: 'Simmons',
-        quantity: '10',
-        price: '2000000',
-        total: '2000000',
-      },
-      {
-        image: 'Jesse',
-        description: 'Simmons',
-        quantity: '10',
-        price: '2000000',
-        total: '2000000',
-      },
-      {
-        image: 'Jesse',
-        description: 'Simmons',
-        quantity: '10',
-        price: '2000000',
-        total: '2000000',
-      },
-      {
-        image: 'Jesse',
-        description: 'Simmons',
-        quantity: '10',
-        price: '2000000',
-        total: '2000000',
-      },
-      {
-        image: 'Jesse',
-        description: 'Simmons',
-        quantity: '10',
-        price: '2000000',
-        total: '2000000',
-      },
-    ];
-    return {
-      form: {
-        method: '',
->>>>>>> 9620584c928f5bd86382eb28a6012c61f715ae57
         total: 1000000,
       },
 
@@ -254,11 +204,7 @@ export default {
 
       // customers
       customers: [],
-<<<<<<< HEAD
       user: "",
-=======
-      username: '',
->>>>>>> 9620584c928f5bd86382eb28a6012c61f715ae57
     };
   },
   mounted() {
@@ -266,7 +212,6 @@ export default {
     this.fetchCustomer();
   },
   computed: {
-<<<<<<< HEAD
     getTotalBill: function () {
       return parseInt(this.form.total).toLocaleString("id-ID");
     },
@@ -327,41 +272,6 @@ export default {
     },
     onSelect(value) {
       this.user = value;
-=======
-    getTotalBill: function() {
-      return parseInt(this.form.total).toLocaleString('id-ID');
-    },
-  },
-  methods: {
-    fetchData() {
-      // For fetch data cart
-    },
-    propsDeleteItem(item) {
-      this.$buefy.dialog.confirm({
-        title: 'Delete this item from cart?',
-        message:
-          'Item that has been <b>deleted</b> will not be count as your item again!',
-        type: 'is-danger',
-        hasIcon: true,
-        icon: 'times-circle',
-        iconPack: 'fa',
-        cancelText: 'No',
-        confirmText: 'Yes',
-        onConfirm: () => this.deleteFromCart(item),
-      });
-    },
-    deleteFromCart(item) {
-      alert(item); // for delete item from cart
-    },
-    async fetchCustomer() {
-      const res = await axios.get('/customers');
-      this.customers = res.data;
-    },
-  },
-  watch: {
-    username: function() {
-      console.log(this.username);
->>>>>>> 9620584c928f5bd86382eb28a6012c61f715ae57
     },
   },
 };
