@@ -65,10 +65,15 @@
                 </figure>
               </b-table-column>
 
-              <b-table-column field="quantity" label="Quantity" width="125">
+              <b-table-column
+                field="quantity"
+                label="Quantity"
+                width="125"
+                v-slot="props"
+              >
                 <b-field>
                   <b-numberinput
-                    v-model="quantity"
+                    v-model="props.row.quantity"
                     min="1"
                     size="is-small"
                     controls-position="compact"
@@ -81,8 +86,16 @@
                 Rp. {{ parseInt(props.row.price).toLocaleString("id-ID") }}
               </b-table-column>
 
-              <b-table-column field="total" label="Total" v-slot="props">
-                Rp. {{ parseInt(props.row.total).toLocaleString("id-ID") }}
+              <b-table-column field="total" label="Total" v-slot="props"
+                ><span v-if="typeof props.row.quantity !== 'undefined'">
+                  Rp.
+                  {{
+                    parseInt(
+                      props.row.price * props.row.quantity
+                    ).toLocaleString("id-ID")
+                  }}
+                </span>
+                <span v-else> - </span>
               </b-table-column>
 
               <b-table-column field="action" label="Action" v-slot="props">
@@ -107,7 +120,12 @@
 
           <div class="level is-flex" style="padding: 0 24px">
             <p><strong>Total All Item</strong></p>
-            <p><strong>IDR Rp. 12.000.000</strong></p>
+            <p>
+              <strong
+                >Rp
+                {{ parseInt(calculateTotal()).toLocaleString("id-ID") }}</strong
+              >
+            </p>
           </div>
 
           <hr style="background-color: black; margin: 24px 0" />
@@ -125,6 +143,7 @@
                 @click="isComponentModalActive = true"
                 type="is-primary"
                 style="width: 180px"
+                :disabled="!checkValidity()"
                 ><b>Pay</b></b-button
               >
             </div>
@@ -157,7 +176,6 @@
               >
                 <option value="Cash">Cash</option>
                 <option value="Transfer">Transfer</option>
-                <option value="Credit">Credit</option>
               </b-select>
             </b-field>
           </section>
@@ -182,6 +200,7 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 
 export default {
   data() {
@@ -193,7 +212,7 @@ export default {
       },
 
       // model for table
-      quantity: 1,
+      quantities: [],
 
       // Table
       data,
@@ -213,20 +232,41 @@ export default {
   },
   computed: {
     getTotalBill: function () {
-      return parseInt(this.form.total).toLocaleString("id-ID");
+      return "Rp " + parseInt(this.calculateTotal()).toLocaleString("id-ID");
     },
   },
   methods: {
+    calculateTotal() {
+      var total = 0;
+      this.data.forEach(function (item) {
+        if (typeof item.quantity !== "undefined") {
+          total += item.quantity * item.price;
+        }
+      });
+      return total;
+    },
+    checkValidity() {
+      var isValid = true;
+      this.data.forEach(function (item) {
+        if (typeof item.quantity === "undefined") {
+          isValid = false;
+          return;
+        }
+      });
+      return isValid;
+    },
     async fetchData() {
-      console.log("test");
       try {
         const res = await axios.get("/carts/1");
         this.data = res.data;
+
+        console.log(this.data);
       } catch (error) {
         this.data = [];
       }
     },
     propsDeleteItem(item) {
+      console.log(item);
       this.$buefy.dialog.confirm({
         title: "Delete this item from cart?",
         message:
@@ -246,20 +286,18 @@ export default {
       await this.fetchData();
     },
     async postTransaction() {
-      console.log("post");
+      var products = [];
+      this.data.forEach(function (item) {
+        var product = {
+          product_id: item.id,
+          qty: item.quantity,
+        };
+        products.push(product);
+      });
       var transaction = {
         customer_id: 1,
-        date: "2012-11-01T22:08:41+00:00",
-        products: [
-          {
-            product_id: 1,
-            qty: 1,
-          },
-          {
-            product_id: 2,
-            qty: 2,
-          },
-        ],
+        date: moment(Date.now()).format("YYYY-MM-DDTHH:mm:SSZ"),
+        products: products,
       };
       await axios.post("/transactions", transaction);
       alert("Payment Successful!");

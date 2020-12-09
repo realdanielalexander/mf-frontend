@@ -59,7 +59,7 @@
               <template slot="empty">
                 <section class="section">
                   <div class="content has-text-grey has-text-centered">
-                    <p>Cart is empty!</p>
+                    <p>No transactions</p>
                   </div>
                 </section>
               </template>

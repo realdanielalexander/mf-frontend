@@ -51,21 +51,29 @@
               <b-table-column
                 field="description"
                 label="Description"
+                width="200"
                 v-slot="props"
               >
                 {{ props.row.description }}
               </b-table-column>
 
-              <b-table-column field="quantity" label="Quantity" width="125">
-                <b-field>
-                  <b-numberinput
-                    v-model="quantity"
-                    min="1"
-                    size="is-small"
-                    controls-position="compact"
-                  >
-                  </b-numberinput>
-                </b-field>
+              <b-table-column field="image" label="Image" v-slot="props">
+                <figure style="text-align: center; margin: 0">
+                  <img
+                    class="image-product"
+                    :src="require(`@/${props.row.image_url}`)"
+                    width="200px"
+                  />
+                </figure>
+              </b-table-column>
+
+              <b-table-column
+                field="quantity"
+                label="Quantity"
+                width="125"
+                v-slot="props"
+              >
+                {{ props.row.qty }}
               </b-table-column>
 
               <b-table-column field="price" label="Price" v-slot="props">
@@ -98,7 +106,11 @@
 
           <div class="level is-flex" style="padding: 0 24px">
             <p><strong>Total All Item</strong></p>
-            <p><strong>IDR Rp. 12.000.000</strong></p>
+            <p>
+              <strong
+                >Rp. {{ parseInt(data.total).toLocaleString("id-ID") }}</strong
+              >
+            </p>
           </div>
 
           <hr style="background-color: black; margin: 24px 0" />
@@ -111,12 +123,6 @@
                 type="is-light"
                 style="margin-right: 12px"
                 ><b>Continue Shopping</b></b-button
-              >
-              <b-button
-                @click="isComponentModalActive = true"
-                type="is-primary"
-                style="width: 180px"
-                ><b>Pay</b></b-button
               >
             </div>
           </div>
@@ -200,6 +206,7 @@ export default {
     };
   },
   mounted() {
+    this.transactionId = this.$route.params.transactionId;
     this.fetchData();
     this.fetchCustomer();
   },
@@ -212,7 +219,7 @@ export default {
     async fetchData() {
       console.log("test");
       try {
-        const res = await axios.get("/transactions/1/3");
+        const res = await axios.get("/transactions/1/" + this.transactionId);
         this.data = res.data;
       } catch (error) {
         this.data = [];

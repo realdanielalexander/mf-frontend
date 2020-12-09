@@ -31,7 +31,7 @@
           ><strong>+ Add to Cart</strong></b-button
         >
 
-        <b-button type="is-danger" expanded @click="addToCart()"
+        <b-button type="is-danger" expanded @click="addToWishlist()"
           ><strong>+ Add to Wishlist</strong></b-button
         >
       </div>
@@ -80,29 +80,33 @@ export default {
   },
   mounted() {
     this.productId = this.$route.params.productId;
+    this.categoryId = this.$route.params.categoryId;
     this.fetchData();
   },
   methods: {
     async fetchData() {
-      const res = await axios.get(`/products/${this.productId}`);
+      const res = await axios.get(
+        `/products/${this.categoryId}/${this.productId}`
+      );
       this.product = res.data;
     },
     async addToCart() {
-      console.log(this.productId);
-
-      console.log({
-        customer_id: 1,
-        product_id: parseInt(this.productId),
-      });
       await axios.post(`/carts`, {
         customer_id: 1,
         product_id: parseInt(this.productId),
       });
+
+      alert("Product " + this.product.name + " added to cart.");
+    },
+    async addToWishlist() {
+      await axios.post(`/wishlists`, {
+        customer_id: 1,
+        product_id: parseInt(this.productId),
+      });
+
+      alert("Product " + this.product.name + " added to wishlist.");
     },
     viewDesign3D(id) {
-      console.log("3D");
-      console.log(id);
-
       var showcaseContainer = document.getElementById("showcaseContainer");
       document.getElementById("showcase").src =
         "https://dsign4you.com/3d/viewer/?q=hq&design=" + id;

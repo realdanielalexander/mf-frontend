@@ -24,6 +24,27 @@
         </b-select>
       </b-field>
     </div> -->
+    <div>
+      <b-field>
+        Category:
+        <select
+          placeholder="Select a category"
+          icon="user"
+          v-model="currentCategory"
+          @change="onChange"
+          expanded
+          style="padding: 8px 48px; margin-left: 8px; border: 0px; outline: 0px"
+        >
+          <option
+            v-for="category in categories"
+            :key="category.id"
+            v-bind:value="category.id"
+          >
+            {{ category.name }}
+          </option>
+        </select>
+      </b-field>
+    </div>
     <div
       v-if="products.length != 0"
       class="columns is-multiline"
@@ -35,7 +56,9 @@
         :key="product.id"
         :index="index"
       >
-        <router-link :to="{ path: '/product/' + product.id }">
+        <router-link
+          :to="{ path: '/product/' + product.category_id + '/' + product.id }"
+        >
           <div class="card">
             <div class="card-content">
               <div class="content">
@@ -78,7 +101,7 @@
       v-else
       class="level has-text-grey has-text-centered"
     >
-      <p>Wishlist is empty!</p>
+      <p>Market is empty!</p>
     </div>
   </div>
 </template>
@@ -90,13 +113,16 @@ export default {
   mounted() {
     this.fetchData();
     this.fetchCustomer();
+    this.fetchCategory();
   },
   data() {
     return {
       isLoading: false,
       products: [],
       customers: [],
+      categories: [],
       user: "",
+      currentCategory: null,
     };
   },
   methods: {
@@ -104,12 +130,20 @@ export default {
       const res = await axios.get("/products");
       this.products = res.data;
     },
+    async fetchDataByCategory(categoryId) {
+      const res = await axios.get("/products/" + categoryId);
+      this.products = res.data;
+    },
     async fetchCustomer() {
       const res = await axios.get("/customers");
       this.customers = res.data;
     },
-    onSelect(value) {
-      this.user = value;
+    async fetchCategory() {
+      const res = await axios.get("/categories");
+      this.categories = res.data;
+    },
+    onChange: function () {
+      this.fetchDataByCategory(this.currentCategory);
     },
   },
 };

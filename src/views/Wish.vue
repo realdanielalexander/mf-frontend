@@ -58,7 +58,13 @@
                   size="is-small"
                   controls-position="compact"
                 ></b-numberinput> -->
-                <b-button type="is-primary" expanded>+ Add to Cart</b-button>
+                <b-button
+                  type="is-danger"
+                  expanded
+                  icon-left="trash"
+                  @click="propsDeleteItem(product)"
+                  >Remove from Wishlist</b-button
+                >
               </div>
             </div>
           </div>
@@ -100,12 +106,35 @@ export default {
   },
   methods: {
     async fetchData() {
-      const res = await axios.get("/wishlists/1");
-      this.products = res.data;
+      try {
+        const res = await axios.get("/wishlists/1");
+        this.products = res.data;
+      } catch (error) {
+        this.products = [];
+      }
     },
     async fetchCustomer() {
       const res = await axios.get("/customers");
       this.customers = res.data;
+    },
+    propsDeleteItem(item) {
+      console.log(item);
+      this.$buefy.dialog.confirm({
+        title: "Delete this item from wishlist?",
+        message:
+          "Item that has been <b>deleted</b> will not be count as your item again!",
+        type: "is-danger",
+        hasIcon: true,
+        icon: "times-circle",
+        iconPack: "fa",
+        cancelText: "No",
+        confirmText: "Yes",
+        onConfirm: () => this.removeFromWishlist(item),
+      });
+    },
+    async removeFromWishlist(item) {
+      await axios.delete(`/wishlists/1/` + item.id);
+      await this.fetchData();
     },
     onSelect(value) {
       this.user = value;
