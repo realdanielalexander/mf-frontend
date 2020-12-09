@@ -11,13 +11,12 @@
         <b-select
           placeholder="Select a customer"
           icon="user"
-          v-on:change="onSelect()"
           v-model="username"
         >
           <option
             v-for="customer in customers"
             :key="customer.id"
-            :value="customer.name"
+            :value="customer.id"
             >{{ customer.name }}</option
           >
         </b-select>
@@ -98,6 +97,11 @@ export default {
     },
     onSelect(value) {
       console.log(value);
+    },
+  },
+  watch: {
+    username: function() {
+      console.log(this.username);
     },
   },
 };
