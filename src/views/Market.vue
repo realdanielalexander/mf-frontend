@@ -84,6 +84,7 @@ export default {
       products: [],
       customers: [],
       username: '',
+      id: 0,
     };
   },
   methods: {
@@ -101,7 +102,8 @@ export default {
   },
   watch: {
     username: function() {
-      console.log(this.username);
+      this.id = this.username;
+      console.log(this.id);
     },
   },
 };

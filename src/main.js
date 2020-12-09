@@ -33,7 +33,7 @@ Vue.use(Buefy, {
 Vue.use(VueAxios, Axios);
 
 Vue.prototype.$axios = Axios;
-Vue.axios.defaults.baseURL = `https://mf.rvalessandro.com/api`;
+Vue.axios.defaults.baseURL = `http://localhost:8080`;
 
 new Vue({
   router,
