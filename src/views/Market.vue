@@ -5,25 +5,6 @@
         Millenial Catalog
       </h1>
     </div>
-    <!-- <div>
-      <b-field>
-        <b-select
-          placeholder="Select a customer"
-          icon="user"
-          value="user"
-          @onSelect="onSelect"
-        >
-          <option
-            v-for="(customer, index) in customers"
-            :key="customer.id"
-            :index="index"
-            value="customer.id"
-          >
-            {{ customer.name }}
-          </option>
-        </b-select>
-      </b-field>
-    </div> -->
     <div>
       <b-field>
         Category:
@@ -110,18 +91,16 @@
 import axios from "axios";
 
 export default {
+  props: ["currentCustomerId"],
   mounted() {
     this.fetchData();
-    this.fetchCustomer();
     this.fetchCategory();
   },
   data() {
     return {
       isLoading: false,
       products: [],
-      customers: [],
       categories: [],
-      user: "",
       currentCategory: null,
     };
   },
@@ -133,10 +112,6 @@ export default {
     async fetchDataByCategory(categoryId) {
       const res = await axios.get("/products/" + categoryId);
       this.products = res.data;
-    },
-    async fetchCustomer() {
-      const res = await axios.get("/customers");
-      this.customers = res.data;
     },
     async fetchCategory() {
       const res = await axios.get("/categories");

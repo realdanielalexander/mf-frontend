@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="is-column6" style="padding:2rem">
+    <div class="is-column6" style="padding: 2rem">
       <h1 class="title">Create New User</h1>
       <b-field label="Name">
         <b-input v-model="person.name" placeholder="Insert Your Name"></b-input>
@@ -32,25 +32,26 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
-  name: 'SignUp',
+  props: ["currentCustomerId"],
+  name: "SignUp",
   data() {
     return {
       person: {
-        name: '',
-        email: '',
-        password: '',
-        address: '',
+        name: "",
+        email: "",
+        password: "",
+        address: "",
       },
     };
   },
   methods: {
     async postCustomer() {
       console.log(this.person);
-      await axios.post('/customers', this.person);
-      this.$router.push({ name: 'home' });
+      await axios.post("/customers", this.person);
+      this.$router.push({ name: "home" });
     },
   },
   computed: {

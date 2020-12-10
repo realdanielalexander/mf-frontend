@@ -7,25 +7,7 @@
       <div class="card">
         <div class="card-content">
           <h1 class="title cart-header"><b>Shopping Cart</b></h1>
-          <div>
-            <!-- <b-field>
-              <b-select
-                placeholder="Select a customer"
-                icon="user"
-                value="user"
-                @onSelect="onSelect"
-              >
-                <option
-                  v-for="(customer, index) in customers"
-                  :key="customer.id"
-                  :index="index"
-                  value="customer.id"
-                >
-                  {{ customer.name }}
-                </option>
-              </b-select>
-            </b-field> -->
-          </div>
+          <div></div>
           <div class="content" style="margin-bottom: 0">
             <b-table
               :data="data ? data : []"
@@ -203,6 +185,7 @@ import axios from "axios";
 import moment from "moment";
 
 export default {
+  props: ["currentCustomerId"],
   data() {
     const data = [];
     return {
@@ -228,7 +211,6 @@ export default {
   },
   mounted() {
     this.fetchData();
-    this.fetchCustomer();
   },
   computed: {
     getTotalBill: function () {
@@ -257,16 +239,13 @@ export default {
     },
     async fetchData() {
       try {
-        const res = await axios.get("/carts/1");
+        const res = await axios.get("/carts/" + this.currentCustomerId);
         this.data = res.data;
-
-        console.log(this.data);
       } catch (error) {
         this.data = [];
       }
     },
     propsDeleteItem(item) {
-      console.log(item);
       this.$buefy.dialog.confirm({
         title: "Delete this item from cart?",
         message:
@@ -281,8 +260,7 @@ export default {
       });
     },
     async deleteFromCart(item) {
-      await axios.delete("/carts/1/" + item.id);
-      alert("Item " + item.name + " deleted"); // for delete item from cart
+      await axios.delete("/carts/" + this.currentCustomerId + "/" + item.id);
       await this.fetchData();
     },
     async postTransaction() {
@@ -295,18 +273,13 @@ export default {
         products.push(product);
       });
       var transaction = {
-        customer_id: 1,
-        date: moment(Date.now()).format("YYYY-MM-DDTHH:mm:SSZ"),
+        customer_id: parseInt(this.currentCustomerId),
+        date: moment(Date.now()).format("YYYY-MM-DDTHH:mm:ssZ"),
         products: products,
       };
       await axios.post("/transactions", transaction);
       alert("Payment Successful!");
       this.isComponentModalActive = false;
-    },
-
-    async fetchCustomer() {
-      const res = await axios.get("/customers");
-      this.customers = res.data;
     },
     onSelect(value) {
       this.user = value;

@@ -41,15 +41,50 @@
         </b-icon>
         <span style="margin-left: 0.5rem">Transactions</span>
       </b-navbar-item>
+      <b-navbar-item href="/signup">
+        <b-icon pack="fas" icon="user" size="is-small" type="is-primary">
+        </b-icon>
+        <span style="margin-left: 0.5rem">New User</span>
+      </b-navbar-item>
     </template>
     <template slot="end">
-      <b-navbar-item href="/signup">
-        <b-button class="button is-primary">Sign Up</b-button>
+      <b-navbar-item>
+        <b-field>
+          <select
+            placeholder="Select a customer"
+            icon="user"
+            value="user"
+            @change="$emit('change-user', selectedCustomerId)"
+            style="
+              padding: 8px 48px;
+              margin-left: 8px;
+              border: 1px solid grey;
+              outline: 0px;
+            "
+            v-model="selectedCustomerId"
+          >
+            <option
+              v-for="(customer, index) in customers"
+              :key="customer.id"
+              :index="index"
+              v-bind:value="customer.id"
+            >
+              User: {{ customer.name }}
+            </option>
+          </select>
+        </b-field>
       </b-navbar-item>
     </template>
   </b-navbar>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["customers", "currentCustomerId"],
+  data() {
+    return {
+      selectedCustomerId: this.currentCustomerId,
+    };
+  },
+};
 </script>

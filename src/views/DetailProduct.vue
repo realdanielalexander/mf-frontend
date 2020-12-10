@@ -71,6 +71,7 @@
 import axios from "axios";
 
 export default {
+  props: ["currentCustomerId"],
   data() {
     return {
       global: {},
@@ -92,7 +93,7 @@ export default {
     },
     async addToCart() {
       await axios.post(`/carts`, {
-        customer_id: 1,
+        customer_id: parseInt(this.currentCustomerId),
         product_id: parseInt(this.productId),
       });
 
@@ -100,7 +101,7 @@ export default {
     },
     async addToWishlist() {
       await axios.post(`/wishlists`, {
-        customer_id: 1,
+        customer_id: parseInt(this.currentCustomerId),
         product_id: parseInt(this.productId),
       });
 

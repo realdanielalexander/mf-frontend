@@ -44,7 +44,11 @@
                   :src="require(`@/${product.image_url}`)"
                 />
               </figure>
-              <router-link :to="{ path: '/product/' + product.id }">
+              <router-link
+                :to="{
+                  path: '/product/' + product.category_id + '/' + product.id,
+                }"
+              >
                 <a class="product-name"
                   ><strong>{{ product.name }}</strong></a
                 >
@@ -92,7 +96,9 @@
 import axios from "axios";
 
 export default {
+  props: ["currentCustomerId"],
   mounted() {
+    console.log(this.currentCustomerId);
     this.fetchData();
     this.fetchCustomer();
   },
@@ -100,25 +106,18 @@ export default {
     return {
       isLoading: false,
       products: [],
-      customers: [],
-      user: "",
     };
   },
   methods: {
     async fetchData() {
       try {
-        const res = await axios.get("/wishlists/1");
+        const res = await axios.get("/wishlists/" + this.currentCustomerId);
         this.products = res.data;
       } catch (error) {
         this.products = [];
       }
     },
-    async fetchCustomer() {
-      const res = await axios.get("/customers");
-      this.customers = res.data;
-    },
     propsDeleteItem(item) {
-      console.log(item);
       this.$buefy.dialog.confirm({
         title: "Delete this item from wishlist?",
         message:
@@ -133,7 +132,9 @@ export default {
       });
     },
     async removeFromWishlist(item) {
-      await axios.delete(`/wishlists/1/` + item.id);
+      await axios.delete(
+        `/wishlists/` + this.currentCustomerId + "/" + item.id
+      );
       await this.fetchData();
     },
     onSelect(value) {
