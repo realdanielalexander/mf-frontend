@@ -115,7 +115,16 @@ export default {
     },
     async fetchCategory() {
       const res = await axios.get("/categories");
-      this.categories = res.data;
+      this.categories = this.categoriesAdapter(res.data);
+    },
+    categoriesAdapter(categories) {
+      var categoriesAdapted = categories.map(
+        category => ({
+          id: category.id, 
+          name: category.name
+          }
+        ));
+      return categoriesAdapted
     },
     onChange: function () {
       this.fetchDataByCategory(this.currentCategory);
