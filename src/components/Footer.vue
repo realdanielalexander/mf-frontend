@@ -9,8 +9,7 @@
                 <b-icon pack="fab" icon="youtube-square" size="is-large"></b-icon>
             </div>
             <p>
-            @Copyright Sitename. All Rights Reserved.<br>
-            Powered by Create Ecommerce
+            @Copyright Millenial Fashion 2021. All Rights Reserved.<br>
             </p>
         </div>
     </footer>
