@@ -12,6 +12,8 @@ import Signup from '../views/Signup.vue';
 import Wish from '../views/Wish.vue';
 import Transactions from '../views/Transactions.vue';
 import DetailTransaction from '../views/DetailTransaction.vue';
+import Chat from '../views/chat/Chat.vue';
+import ChatAdmin from '../views/chat/ChatAdmin.vue';
 
 const routes = [
   {
@@ -53,6 +55,16 @@ const routes = [
     path: '/transactions/:transactionId',
     name: 'detailTransaction',
     component: DetailTransaction,
+  },
+  {
+    path: '/chat',
+    name: 'Chat',
+    component: Chat,
+  },
+  {
+    path: '/chat-admin',
+    name: 'ChatAdmin',
+    component: ChatAdmin,
   },
 ];
 

@@ -46,6 +46,11 @@
         </b-icon>
         <span style="margin-left: 0.5rem">New User</span>
       </b-navbar-item>
+      <b-navbar-item href="/chat">
+        <b-icon pack="fas" icon="comments" size="is-small" type="is-primary">
+        </b-icon>
+        <span style="margin-left: 0.5rem">Customer Service</span>
+      </b-navbar-item>
     </template>
     <template slot="end">
       <b-navbar-item>
