@@ -100,7 +100,6 @@ export default {
   mounted() {
     console.log(this.currentCustomerId);
     this.fetchData();
-    this.fetchCustomer();
   },
   data() {
     return {

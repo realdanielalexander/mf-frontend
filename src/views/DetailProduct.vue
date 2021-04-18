@@ -19,6 +19,48 @@
         {{ product.description }}
       </p>
       <hr style="background-color: hsl(0, 0%, 86%); margin: 12px 0" />
+      Sizes
+      <!-- ----------------------------------------------------------------------------- -->
+      <!-- GrpItemMandatory -->
+      <!-- ----------------------------------------------------------------------------- -->
+      <div style="width: 50%">
+        <div class="mt-4">
+          <v-item-group mandatory v-model="selectedVariation">
+            <v-container >
+              <v-row>
+                <v-col v-for="n in this.variations" :key="n.id" cols="12" md="4">
+                  <v-item v-slot:default="{ active, toggle }">
+                    <v-card
+                      :color="active ? 'primary' : 'white'"
+                      class="d-flex align-center black--text"
+                      dark
+                      height="50"
+                      @click="toggle"
+                    >
+                      <div
+                        class="font-weight-bold flex-grow-1 text-center"
+                        v-bind:class="{ 'white--text': active }"
+                      >
+                        {{ n.variation_name }}
+                      </div>
+
+                      <!-- <v-scroll-y-transition>
+                      <div
+                        v-if="active"
+                        class="display-3 flex-grow-1 text-center"
+                      >
+                        Active
+                      </div>
+                    </v-scroll-y-transition> -->
+                    </v-card>
+                  </v-item>
+                </v-col>
+              </v-row>
+            </v-container>
+          </v-item-group>
+        </div>
+      </div>
+      <div v-if="this.selectedVariationObject">Stock: {{ this.selectedVariationObject.stock }}</div>
       <div class="is-flex" style="flex-direction: row">
         <b-button
           class="mr-3"
@@ -27,7 +69,7 @@
           expanded
           ><strong>View</strong></b-button
         >
-        <b-button class="mr-3" type="is-primary" expanded @click="addToCart()"
+        <b-button v-if="this.selectedVariationObject" :disabled="selectedVariationObject.stock<1" class="mr-3" type="is-primary" expanded @click="addToCart()"
           ><strong>+ Add to Cart</strong></b-button
         >
 
@@ -77,12 +119,25 @@ export default {
       global: {},
       product: null,
       productId: "",
+      variations: [],
+      selectedVariation: null,
+      selectedStock: null,
+
+      // modal
+      isComponentModalActive: false,
+
     };
   },
   mounted() {
     this.productId = this.$route.params.productId;
     this.categoryId = this.$route.params.categoryId;
     this.fetchData();
+    this.fetchVariations();
+  },
+  computed: {
+    selectedVariationObject: function() {
+      return this.variations[this.selectedVariation];
+    },
   },
   methods: {
     async fetchData() {
@@ -91,13 +146,27 @@ export default {
       );
       this.product = res.data;
     },
+    
+    async fetchVariations() {
+      const res = await axios.get(
+        `/variations/${this.productId}`
+      );
+      this.variations = res.data;
+    },
     async addToCart() {
       await axios.post(`/carts`, {
         customer_id: parseInt(this.currentCustomerId),
         product_id: parseInt(this.productId),
       });
-
-      alert("Product " + this.product.name + " added to cart.");
+      
+      this.$buefy.dialog.alert({
+        title: "Add Product to Cart",
+        message: "Product " + this.product.name + " successfully added to cart.",
+        type: "is-success",
+        hasIcon: true,
+        icon: "check-circle",
+        iconPack: "fa",
+      });
     },
     async addToWishlist() {
       await axios.post(`/wishlists`, {
@@ -105,7 +174,14 @@ export default {
         product_id: parseInt(this.productId),
       });
 
-      alert("Product " + this.product.name + " added to wishlist.");
+      this.$buefy.dialog.alert({
+        title: "Add Product to Wishlist",
+        message: "Product " + this.product.name + " added to wishlist.",
+        type: "is-success",
+        hasIcon: true,
+        icon: "check-circle",
+        iconPack: "fa",
+      });
     },
     viewDesign3D(id) {
       var showcaseContainer = document.getElementById("showcaseContainer");
@@ -123,6 +199,7 @@ export default {
         showcaseContainer.style.display = "none";
       }
     },
+    
   },
 };
 </script>

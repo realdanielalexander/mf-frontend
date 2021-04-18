@@ -1,13 +1,15 @@
 <template>
-  <div class="app">
-    <Navbar
-      v-bind:customers="customers"
-      :currentCustomerId="currentCustomerId"
-      v-on:change-user="onSelect"
-    />
-    <router-view v-bind:currentCustomerId="currentCustomerId" />
-    <Footer />
-  </div>
+  <v-app>
+    <div class="app">
+      <Navbar
+        v-bind:customers="customers"
+        :currentCustomerId="currentCustomerId"
+        v-on:change-user="onSelect"
+      />
+      <router-view v-bind:currentCustomerId="currentCustomerId" />
+      <Footer />
+    </div>
+  </v-app>
 </template>
 
 <script>

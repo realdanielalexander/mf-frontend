@@ -1,64 +1,84 @@
 <template>
-  <div
-    class="columns is-centered"
-    style="align-items: center; min-height: 100vh"
-  >
-    <div class="column is-four-fifths">
-      <div class="card">
-        <div class="card-content">
-          <h1 class="title cart-header"><b>Transaction History</b></h1>
-          <div></div>
-          <div class="content" style="margin-bottom: 0">
-            <b-table
-              :data="data ? data : []"
-              :hoverable="true"
-              :loading="isLoading"
-            >
-              <b-table-column
-                field="id"
-                label="No"
-                width="40"
-                numeric
-                v-slot="props"
-              >
-                {{ props.index + 1 }}
-              </b-table-column>
+  <!-- ----------------------------------------------------------------------------- -->
+  <!-- TabsFixed -->
+  <!-- ----------------------------------------------------------------------------- -->
+  <div>
+    <div class="mt-4">
+      <v-tabs
+        fixed-tabs
+        background-color="white"
+        v-model="currentTab"
+        @change="filterTransactions(currentTab)"
+      >
+        <v-tab> Waiting for Confirmation </v-tab>
+        <v-tab> Processed </v-tab>
+        <v-tab> Shipped </v-tab>
+        <v-tab> Arrived </v-tab>
+      </v-tabs>
+      <div
+        class="columns is-centered"
+        style="align-items: center; min-height: 100vh"
+      >
+        <div class="column is-four-fifths">
+          <div class="card">
+            <div class="card-content">
+              <h1 class="title cart-header"><b>Transaction History</b></h1>
+              <div></div>
+              <div class="content" style="margin-bottom: 0">
+                <b-table
+                  :data="displayedData ? displayedData : []"
+                  :hoverable="true"
+                  :loading="isLoading"
+                >
+                  <b-table-column
+                    field="id"
+                    label="No"
+                    width="40"
+                    numeric
+                    v-slot="props"
+                  >
+                    {{ props.index + 1 }}
+                  </b-table-column>
 
-              <b-table-column field="Date" label="Date" v-slot="props">
-                {{ formatDate(props.row.date) }}
-              </b-table-column>
+                  <b-table-column field="Date" label="Date" v-slot="props">
+                    {{ formatDate(props.row.date) }}
+                  </b-table-column>
 
-              <b-table-column field="total" label="Total" v-slot="props">
-                Rp. {{ parseInt(props.row.total).toLocaleString("id-ID") }}
-              </b-table-column>
+                  <b-table-column field="total" label="Total" v-slot="props">
+                    Rp. {{ parseInt(props.row.total).toLocaleString("id-ID") }}
+                  </b-table-column>
 
-              <b-table-column field="action" label="Action" v-slot="props">
-                <router-link :to="{ path: '/transactions/' + props.row.id }">
-                  <b-button type="is-white" icon-right="search" />
-                </router-link>
-              </b-table-column>
+                  <b-table-column field="action" label="Action" v-slot="props">
+                    <router-link
+                      :to="{ path: '/transactions/' + props.row.id }"
+                    >
+                      <b-button type="is-white" icon-right="search" />
+                    </router-link>
+                  </b-table-column>
 
-              <template slot="empty">
-                <section class="section">
-                  <div class="content has-text-grey has-text-centered">
-                    <p>No transactions</p>
-                  </div>
-                </section>
-              </template>
-            </b-table>
-          </div>
+                  <template slot="empty">
+                    <section class="section">
+                      <div class="content has-text-grey has-text-centered">
+                        <p>No transactions</p>
+                      </div>
+                    </section>
+                  </template>
+                </b-table>
+              </div>
 
-          <hr style="background-color: black; margin: 24px 0" />
+              <hr style="background-color: black; margin: 24px 0" />
 
-          <div class="level">
-            <div class="level-right is-flex" style="width: 100%">
-              <b-button
-                tag="router-link"
-                to="/market"
-                type="is-light"
-                style="margin-right: 12px"
-                ><b>Continue Shopping</b></b-button
-              >
+              <div class="level">
+                <div class="level-right is-flex" style="width: 100%">
+                  <b-button
+                    tag="router-link"
+                    to="/market"
+                    type="is-light"
+                    style="margin-right: 12px"
+                    ><b>Continue Shopping</b></b-button
+                  >
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -93,6 +113,10 @@ export default {
 
       // customers
       customers: [],
+
+      displayedData: [],
+      shipmentStatus: null,
+      currentTab: null,
       user: "",
     };
   },
@@ -115,6 +139,32 @@ export default {
     },
     formatDate(date) {
       return moment(String(date)).format("DD MMMM YYYY");
+    },
+    
+    filterTransactions(currentTab) {
+      var shipmentStatus = null;
+      switch (currentTab) {
+        case 0:
+          shipmentStatus = "Waiting for Confirmation"
+          break;
+        case 1:
+          shipmentStatus = "Processed"
+          break;
+        case 2:
+          shipmentStatus = "Shipped"
+          break;
+        case 3:
+          shipmentStatus = "Arrived"
+          break;
+        default:
+        // code block
+      }
+      this.displayedData = this.data.filter(
+        (transaction) => transaction.shipment_status == shipmentStatus
+      );
+    },
+    test(id) {
+      console.log(id);
     },
   },
 };
