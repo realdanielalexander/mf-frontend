@@ -1,108 +1,290 @@
 <template>
-  <div
-    class="columns is-multiline is-flex"
-    style="align-items: center; min-height: 100vh"
-  >
-    <div class="column is-5 ml-6 mr-6">
-      <figure>
-        <b-image :src="require(`@/${product.image_url}`)" />
-      </figure>
-    </div>
+  <div>
+    <div
+      class="columns is-multiline is-flex"
+      style="align-items: center; min-height: 75vh"
+    >
+      <div class="column is-5 ml-6 mr-6">
+        <figure>
+          <b-image v-if="product" :src="require(`@/${product.image_url}`)" />
+        </figure>
+      </div>
 
-    <div class="column is-5 mr-6">
-      <p class="title-product">
-        <strong>{{ product.name }}</strong>
-      </p>
-      <p>Rp. {{ parseInt(product.price).toLocaleString("id-ID") }}</p>
-      <hr style="background-color: hsl(0, 0%, 86%); margin: 12px 0" />
-      <p class="description">
-        {{ product.description }}
-      </p>
-      <hr style="background-color: hsl(0, 0%, 86%); margin: 12px 0" />
-      Sizes
-      <!-- ----------------------------------------------------------------------------- -->
-      <!-- GrpItemMandatory -->
-      <!-- ----------------------------------------------------------------------------- -->
-      <div style="width: 50%">
-        <div class="mt-4">
+      <div class="column is-5 mr-6">
+        <p class="title-product">
+          <strong v-if="product">{{ product.name }}</strong>
+        </p>
+
+        <hr style="background-color: hsl(0, 0%, 86%); margin: 12px 0" />
+        <p v-if="product" class="description">
+          {{ product.description }}
+        </p>
+        <hr style="background-color: hsl(0, 0%, 86%); margin: 12px 0" />
+        <p v-if="product" class="font-weight-bold flex-grow-1 display-1">
+          Rp. {{ parseInt(product.price).toLocaleString("id-ID") }}
+        </p>
+        <p class="font-weight-bold flex-grow-1 description">Sizes</p>
+
+        <!-- ----------------------------------------------------------------------------- -->
+        <!-- GrpItemMandatory -->
+        <!-- ----------------------------------------------------------------------------- -->
+        <div style="width: 50%">
           <v-item-group mandatory v-model="selectedVariation">
-            <v-container >
-              <v-row>
-                <v-col v-for="n in this.variations" :key="n.id" cols="12" md="4">
-                  <v-item v-slot:default="{ active, toggle }">
-                    <v-card
-                      :color="active ? 'primary' : 'white'"
-                      class="d-flex align-center black--text"
-                      dark
-                      height="50"
-                      @click="toggle"
+            <v-row>
+              <v-col v-for="n in this.variations" :key="n.id" cols="12" md="4">
+                <v-item v-slot:default="{ active, toggle }">
+                  <v-card
+                    :color="active ? 'primary' : 'white'"
+                    class="d-flex align-center black--text"
+                    dark
+                    height="50"
+                    @click="toggle"
+                  >
+                    <div
+                      class="font-weight-bold flex-grow-1 text-center"
+                      v-bind:class="{ 'white--text': active }"
                     >
-                      <div
-                        class="font-weight-bold flex-grow-1 text-center"
-                        v-bind:class="{ 'white--text': active }"
-                      >
-                        {{ n.variation_name }}
-                      </div>
-
-                      <!-- <v-scroll-y-transition>
-                      <div
-                        v-if="active"
-                        class="display-3 flex-grow-1 text-center"
-                      >
-                        Active
-                      </div>
-                    </v-scroll-y-transition> -->
-                    </v-card>
-                  </v-item>
-                </v-col>
-              </v-row>
-            </v-container>
+                      {{ n.variation }}
+                    </div>
+                  </v-card>
+                </v-item>
+              </v-col>
+            </v-row>
           </v-item-group>
         </div>
-      </div>
-      <div v-if="this.selectedVariationObject">Stock: {{ this.selectedVariationObject.stock }}</div>
-      <div class="is-flex" style="flex-direction: row">
-        <b-button
-          class="mr-3"
-          type="is-light"
-          @click="viewDesign3D(product.preview_url)"
-          expanded
-          ><strong>View</strong></b-button
-        >
-        <b-button v-if="this.selectedVariationObject" :disabled="selectedVariationObject.stock<1" class="mr-3" type="is-primary" expanded @click="addToCart()"
-          ><strong>+ Add to Cart</strong></b-button
-        >
+        <div v-if="this.selectedVariationObject">
+          Stock: {{ this.selectedVariationObject.stock }}
+        </div>
+        <div class="is-flex" style="flex-direction: row">
+          <b-button
+            class="mr-3"
+            type="is-light"
+            @click="viewDesign3D(product.preview_url)"
+            expanded
+            ><strong>View</strong></b-button
+          >
+          <b-button
+            v-if="this.selectedVariationObject"
+            :disabled="selectedVariationObject.stock < 1"
+            class="mr-3"
+            type="is-primary"
+            expanded
+            @click="addToCart()"
+            ><strong>+ Add to Cart</strong></b-button
+          >
 
-        <b-button type="is-danger" expanded @click="addToWishlist()"
-          ><strong>+ Add to Wishlist</strong></b-button
-        >
+          <b-button type="is-danger" expanded @click="addToWishlist()"
+            ><strong>+ Add to Wishlist</strong></b-button
+          >
+        </div>
+      </div>
+
+      <div
+        id="showcaseContainer"
+        class="lity-container"
+        style="width: 100vw; position: fixed; display: none"
+      >
+        <div class="lity-content">
+          <button
+            class="lity-close"
+            type="button"
+            aria-label="Close (Press escape to close)"
+            @click="toggle()"
+          >
+            X
+          </button>
+          <div class="lity-iframe-container" style="max-height: 536px">
+            <iframe
+              id="showcase"
+              frameborder="0"
+              allowfullscreen
+              src="https://dsign4you.com/3d/viewer/?q=hq&design=36805"
+              __idm_frm__="280"
+              style="width: 100vw; height: 500px"
+            >
+            </iframe>
+          </div>
+        </div>
       </div>
     </div>
+    <div>
+      <!-- ----------------------------------------------------------------------------- -->
+      <!-- TabsItems -->
+      <!-- ----------------------------------------------------------------------------- -->
+      <div>
+        <div class="my-4 mx-16">
+          <v-tabs v-model="tab">
+            <v-tab> Comments </v-tab>
+            <v-tab> Reviews </v-tab>
+          </v-tabs>
 
-    <div
-      id="showcaseContainer"
-      class="lity-container"
-      style="width: 100vw; position: fixed; display: none"
-    >
-      <div class="lity-content">
-        <button
-          class="lity-close"
-          type="button"
-          aria-label="Close (Press escape to close)"
-          @click="toggle()"
-        >
-          X
-        </button>
-        <div class="lity-iframe-container" style="max-height: 536px">
-          <iframe
-            id="showcase"
-            frameborder="0"
-            allowfullscreen
-            src="https://dsign4you.com/3d/viewer/?q=hq&design=36805"
-            __idm_frm__="280"
-            style="width: 100vw; height: 500px"
-          >
-          </iframe>
+          <v-tabs-items v-model="tab" class="">
+            <v-tab-item>
+              <v-row class="py-16">
+                <v-col cols="2"> </v-col>
+                <v-col cols="8">
+                  <p class="font-weight-bold">Comments</p>
+
+                  <div class="reply d-flex">
+                    <v-text-field
+                      type="text"
+                      v-model.trim="comment"
+                      placeholder="Leave a comment..."
+                      maxlength="250"
+                      required
+                      @keyup.enter="postComment"
+                    />
+                    <button class="reply--button" @click.prevent="postComment">
+                      <i class="fa fa-paper-plane"></i>Send
+                    </button>
+                  </div>
+                  <div
+                    v-for="comment in comments"
+                    :key="comment.id"
+                    class="d-flex flex-column"
+                  >
+                    <v-divider />
+                    <v-row>
+                      <v-col cols="3">
+                        <v-row class="mr-3">
+                          <v-col cols="3">
+                            <v-avatar size="42"
+                              ><img
+                                :src="require(`@/${comment.image}`)"
+                                :alt="comment.image"
+                            /></v-avatar>
+                          </v-col>
+                          <v-col cols="9">
+                            <span class="font-weight-bold block">
+                              {{ comment.name }}
+                            </span>
+                            <br />
+                            <small class="block">
+                              {{ formatDate(comment.created_at) }}
+                            </small>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-avatar size="42"></v-avatar>
+                        <span>{{ comment.message }}</span>
+                      </v-col>
+                      <v-col cols="3"
+                        ><b-button
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                        />
+                        <!-- <b-button
+                          v-if="
+                            this &&
+                            parseInt(comment.customer_id) ==
+                              parseInt(this.$props.currentCustomerId)
+                          "
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                      /> -->
+                      </v-col>
+                    </v-row>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-tab-item>
+
+            <v-tab-item>
+              <v-row class="py-16">
+                <v-col cols="2"> </v-col>
+                <v-col cols="8">
+                  <p class="font-weight-bold">Reviews</p>
+
+                  <div class="d-flex align-center">
+                    <div>
+                      <p class="mr-3">Rate your recent purchase</p>
+                      <v-rating
+                        class="px-0 mx-0"
+                        hover
+                        dense
+                        length="5"
+                        small
+                        v-model="rating"
+                      ></v-rating>
+                    </div>
+                    <v-text-field
+                      type="text"
+                      v-model.trim="review"
+                      placeholder="Leave a review..."
+                      maxlength="250"
+                      required
+                      @keyup.enter="postReview"
+                    />
+                    <button class="reply--button" @click.prevent="postReview">
+                      <i class="fa fa-paper-plane"></i>Send
+                    </button>
+                  </div>
+                  <div
+                    v-for="review in reviews"
+                    :key="review.id"
+                    class="d-flex flex-column"
+                  >
+                    <v-divider />
+                    <v-row>
+                      <v-col cols="3">
+                        <v-row class="mr-3">
+                          <v-col cols="3">
+                            <v-avatar size="42"
+                              ><img
+                                :src="require(`@/${review.image}`)"
+                                :alt="review.image"
+                            /></v-avatar>
+                          </v-col>
+                          <v-col cols="9"
+                            ><v-rating
+                              class="px-0 mx-0"
+                              hover
+                              dense
+                              length="5"
+                              small
+                              v-model="review.rating"
+                              readonly
+                            ></v-rating>
+                            <span class="font-weight-bold block">
+                              {{ review.name }}
+                            </span>
+                            <br />
+                            <small class="block">
+                              {{ formatDate(review.created_at) }}
+                            </small>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-avatar size="42"></v-avatar>
+                        <span>{{ review.message }}</span>
+                      </v-col>
+                      <v-col cols="3"
+                        ><b-button
+                          @click="deleteComment(review.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                        />
+                        <!-- <b-button
+                          v-if="
+                            this &&
+                            parseInt(comment.customer_id) ==
+                              parseInt(this.$props.currentCustomerId)
+                          "
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                      /> -->
+                      </v-col>
+                    </v-row>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-tab-item>
+          </v-tabs-items>
         </div>
       </div>
     </div>
@@ -111,6 +293,7 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
 
 export default {
   props: ["currentCustomerId"],
@@ -120,22 +303,29 @@ export default {
       product: null,
       productId: "",
       variations: [],
+      comments: [],
+      reviews: [],
+      comment: null,
+      review: null,
+      rating: 5,
       selectedVariation: null,
       selectedStock: null,
+      tab: null,
 
       // modal
       isComponentModalActive: false,
-
     };
   },
-  mounted() {
+  created() {
     this.productId = this.$route.params.productId;
     this.categoryId = this.$route.params.categoryId;
     this.fetchData();
     this.fetchVariations();
+    this.fetchComments();
+    this.fetchReviews();
   },
   computed: {
-    selectedVariationObject: function() {
+    selectedVariationObject: function () {
       return this.variations[this.selectedVariation];
     },
   },
@@ -146,22 +336,65 @@ export default {
       );
       this.product = res.data;
     },
-    
+
     async fetchVariations() {
-      const res = await axios.get(
-        `/variations/${this.productId}`
-      );
+      const res = await axios.get(`/variations/${this.productId}/product`);
       this.variations = res.data;
+    },
+
+    async fetchComments() {
+      const res = await axios.get(`/comments/${this.productId}`);
+      this.comments = res.data.reverse();
+      console.log(res.data);
+    },
+    async fetchReviews() {
+      const res = await axios.get(`/reviews/${this.productId}`);
+      this.reviews = res.data.reverse();
+      console.log(res.data);
+    },
+    async postComment() {
+      if (this.comment === "" || this.comment === null) return;
+      const res = await axios.post(`/comments`, {
+        customer_id: parseInt(this.currentCustomerId),
+        product_id: parseInt(this.productId),
+        message: this.comment,
+      });
+      this.comment = "";
+      this.comments.unshift(res.data);
+    },
+    async postReview() {
+      if (this.review === "" || this.review === null) return;
+      const res = await axios.post(`/reviews`, {
+        customer_id: parseInt(this.currentCustomerId),
+        product_id: parseInt(this.productId),
+        message: this.review,
+        rating: this.rating
+      });
+      this.review = "";
+      this.reviews.unshift(res.data);
+    },
+
+    async deleteComment(id) {
+      await axios.delete(`/comments/${id}`);
+      this.comments = this.comments.filter((comment) => comment.id !== id);
+    },
+
+    async deleteReview(id) {
+      await axios.delete(`/reviews/${id}`);
+      this.reviews = this.reviews.filter((review) => review.id !== id);
     },
     async addToCart() {
       await axios.post(`/carts`, {
         customer_id: parseInt(this.currentCustomerId),
-        product_id: parseInt(this.productId),
+        variation_id: parseInt(
+          this.variations[this.selectedVariation].variation_id
+        ),
       });
-      
+
       this.$buefy.dialog.alert({
         title: "Add Product to Cart",
-        message: "Product " + this.product.name + " successfully added to cart.",
+        message:
+          "Product " + this.product.name + " successfully added to cart.",
         type: "is-success",
         hasIcon: true,
         icon: "check-circle",
@@ -199,7 +432,10 @@ export default {
         showcaseContainer.style.display = "none";
       }
     },
-    
+
+    formatDate(date) {
+      return moment(String(date)).format("DD MMMM YYYY");
+    },
   },
 };
 </script>

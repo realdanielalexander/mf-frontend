@@ -1,6 +1,8 @@
 import Vue from "vue";
 import Vuetify from "vuetify/lib";
 import "@/../scss/vuetify/overrides.scss";
+import 'material-design-icons-iconfont/dist/material-design-icons.css';
+import '@mdi/font/css/materialdesignicons.css'
 Vue.use(Vuetify);
 
 const theme = {
@@ -33,5 +35,4 @@ export default new Vuetify({
     },
     dark: false, // If you want to set dark theme then dark:true else set to false
   },
-  rtl: false, // If you want to set rtl theme then rtl:true else set to false
 });

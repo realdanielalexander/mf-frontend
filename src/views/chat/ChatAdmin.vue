@@ -113,7 +113,6 @@
 
 <script>
 import Vue from "vue";
-// import UsersList from "./userslist.js";
 import io from "socket.io-client";
 import axios from "axios";
 import moment from "moment";

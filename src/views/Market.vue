@@ -1,30 +1,20 @@
 <template>
   <div class="columns is-vcentered is-flex" style="flex-direction: column">
-    <div class="column">
-      <h1 style="padding: 12px 48px" class="has-text-centered title">
+    <div class="mt-8 is-flex" style="justify-content: space-between;">
+      
+      <div style="padding: 12px 48px" class="title">
         Millenial Catalog
-      </h1>
-    </div>
-    <div>
+      </div>
       <b-field>
-        Category:
-        <select
-          placeholder="Select a category"
-          icon="user"
+        <v-select
+          :items="categories"
+          label="Category"
+          outlined
           v-model="currentCategory"
           @change="onChange"
-          expanded
-          style="padding: 8px 48px; margin-left: 8px; border: 0px; outline: 0px"
-        >
-          <option
-            v-for="category in categories"
-            :key="category.id"
-            v-bind:value="category.id"
-          >
-            {{ category.name }}
-          </option>
-        </select>
+        ></v-select>
       </b-field>
+
     </div>
     <div
       v-if="products.length != 0"
@@ -121,12 +111,14 @@ export default {
       var categoriesAdapted = categories.map(
         category => ({
           id: category.id, 
-          name: category.name
+          text: category.name,
+          value: category.id
           }
         ));
       return categoriesAdapted
     },
     onChange: function () {
+      console.log("change triggerd");
       this.fetchDataByCategory(this.currentCategory);
     },
   },

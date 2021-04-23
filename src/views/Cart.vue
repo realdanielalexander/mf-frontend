@@ -64,6 +64,15 @@
                 </b-field>
               </b-table-column>
 
+              <b-table-column
+                field="variation"
+                label="Variation"
+                width="125"
+                v-slot="props"
+              >
+                {{ props.row.variation }}
+              </b-table-column>
+
               <b-table-column field="price" label="Price" v-slot="props">
                 Rp. {{ parseInt(props.row.price).toLocaleString("id-ID") }}
               </b-table-column>
@@ -267,7 +276,7 @@ export default {
       var products = [];
       this.data.forEach(function (item) {
         var product = {
-          product_id: item.id,
+          variation_id: item.variation_id,
           qty: item.quantity,
         };
         products.push(product);
@@ -277,8 +286,25 @@ export default {
         date: moment(Date.now()).format("YYYY-MM-DDTHH:mm:ssZ"),
         products: products,
       };
-      await axios.post("/transactions", transaction);
-      alert("Payment Successful!");
+      console.log(transaction);
+      
+      var transactionResult = await axios.post("/transactions", transaction);
+      var shipmentStatus = {
+          transaction_id: transactionResult.data.id,
+          status: "Waiting for Confirmation"
+      };
+      await axios.post("/shipment-statuses", shipmentStatus);
+      
+      this.$buefy.dialog.alert({
+        title: "Payment Successful",
+        message:
+          "Thank you for shopping at Millennial Fashion!",
+        type: "is-success",
+        hasIcon: true,
+        icon: "check-circle",
+        iconPack: "fa",
+      });
+
       this.isComponentModalActive = false;
     },
     onSelect(value) {

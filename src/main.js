@@ -14,6 +14,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
 library.add(fas, fab);
 Vue.component('vue-fontawesome', FontAwesomeIcon);
