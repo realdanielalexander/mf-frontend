@@ -53,9 +53,6 @@
       </b-navbar-item>
     </template>
     <template slot="end">
-      <!-- ---------------------------------- -->
-      <!---Notification -->
-      <!-- ---------------------------------- -->
       <b-navbar-item>
         <v-menu
           bottom
@@ -66,7 +63,7 @@
         >
           <template v-slot:activator="{ on }">
             <v-btn icon v-on="on" class="mr-1" @click="updateNotifications">
-              <v-badge color="red" dot>
+              <v-badge :value="unread" color="red" dot>
                 <b-icon
                   pack="fas"
                   icon="bell"
@@ -166,6 +163,7 @@ export default {
     return {
       selectedCustomerId: this.currentCustomerId,
       notifications: [],
+      unread: 0,
       // href() {
       //   return undefined;
       // },
@@ -182,8 +180,10 @@ export default {
         image: notification.image,
         link: notification.link,
         isRead: notification.is_read,
-        time: "12:30AM",
+        time: "",
       }));
+      this.unread = this.notifications.filter(notification => !notification.isRead).length
+      console.log(this.notifications);
     },
     async updateNotifications() {
       await axios.put("/notifications/" + this.currentCustomerId, {});

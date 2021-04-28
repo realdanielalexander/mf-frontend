@@ -92,7 +92,7 @@ const routes = [
   },
   {
     path: 'admin/product/:categoryId/:productId',
-    name: 'detailProduct',
+    name: 'detailProductAdmin',
     component: DetailProduct,
   },
 ];

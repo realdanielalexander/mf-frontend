@@ -187,6 +187,70 @@
                       /> -->
                       </v-col>
                     </v-row>
+                    <div class="reply d-flex">
+                      <v-text-field
+                        type="text"
+                        v-model.trim="comment.reply"
+                        placeholder="Leave a reply..."
+                        maxlength="250"
+                        required
+                        @keyup.enter="postCommentReply(comment)"
+                      />
+                      <button
+                        class="reply--button"
+                        @click.prevent="postCommentReply(comment)"
+                      >
+                        <i class="fa fa-paper-plane"></i>Send
+                      </button>
+                    </div>
+                    <b v-if="comment.replies.length > 0">Replies:</b>
+                    <v-row
+                      v-for="reply in comment.replies"
+                      :key="reply.id"
+                      class="ml-8"
+                    >
+                      <v-col cols="3">
+                        <v-row class="mr-3">
+                          <v-col cols="3">
+                            <v-avatar size="42"
+                              ><img
+                                :src="require(`@/${reply.image}`)"
+                                :alt="reply.image"
+                            /></v-avatar>
+                          </v-col>
+                          <v-col cols="9">
+                            <span class="font-weight-bold block">
+                              {{ reply.name }}
+                            </span>
+                            <br />
+                            <small class="block">
+                              {{ formatDate(reply.created_at) }}
+                            </small>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-avatar size="42"></v-avatar>
+                        <span>{{ reply.message }}</span>
+                      </v-col>
+                      <v-col cols="3"
+                        ><b-button
+                          @click="deleteCommentReply(reply.id, comment)"
+                          type="is-danger"
+                          icon-right="trash"
+                        />
+                        <!-- <b-button
+                          v-if="
+                            this &&
+                            parseInt(comment.customer_id) ==
+                              parseInt(this.$props.currentCustomerId)
+                          "
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                      /> -->
+                      </v-col>
+                    </v-row>
                   </div>
                 </v-col>
               </v-row>
@@ -280,6 +344,70 @@
                       /> -->
                       </v-col>
                     </v-row>
+                    <div class="reply d-flex">
+                      <v-text-field
+                        type="text"
+                        v-model.trim="review.reply"
+                        placeholder="Leave a reply..."
+                        maxlength="250"
+                        required
+                        @keyup.enter="postReviewReply(review)"
+                      />
+                      <button
+                        class="reply--button"
+                        @click.prevent="postReviewReply(review)"
+                      >
+                        <i class="fa fa-paper-plane"></i>Send
+                      </button>
+                    </div>
+                    <b v-if="review.replies.length > 0">Replies:</b>
+                    <v-row
+                      v-for="reply in review.replies"
+                      :key="reply.id"
+                      class="ml-8"
+                    >
+                      <v-col cols="3">
+                        <v-row class="mr-3">
+                          <v-col cols="3">
+                            <v-avatar size="42"
+                              ><img
+                                :src="require(`@/${reply.image}`)"
+                                :alt="reply.image"
+                            /></v-avatar>
+                          </v-col>
+                          <v-col cols="9">
+                            <span class="font-weight-bold block">
+                              {{ reply.name }}
+                            </span>
+                            <br />
+                            <small class="block">
+                              {{ formatDate(reply.created_at) }}
+                            </small>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                      <v-col cols="6">
+                        <v-avatar size="42"></v-avatar>
+                        <span>{{ reply.message }}</span>
+                      </v-col>
+                      <v-col cols="3"
+                        ><b-button
+                          @click="deleteReviewReply(reply.id, review)"
+                          type="is-danger"
+                          icon-right="trash"
+                        />
+                        <!-- <b-button
+                          v-if="
+                            this &&
+                            parseInt(comment.customer_id) ==
+                              parseInt(this.$props.currentCustomerId)
+                          "
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                      /> -->
+                      </v-col>
+                    </v-row>
                   </div>
                 </v-col>
               </v-row>
@@ -307,6 +435,7 @@ export default {
       reviews: [],
       comment: null,
       review: null,
+      commentReply: null,
       rating: 5,
       selectedVariation: null,
       selectedStock: null,
@@ -362,27 +491,99 @@ export default {
       this.comment = "";
       this.comments.unshift(res.data);
     },
+    async postCommentReply(comment) {
+      console.log(comment);
+      if (comment.reply === "" || comment.reply === null) return;
+      const res = await axios.post(`/comment-replies`, {
+        customer_id: parseInt(this.currentCustomerId),
+        comment_id: parseInt(comment.id),
+        message: comment.reply,
+      });
+      comment.reply = "";
+      comment.replies.unshift(res.data);
+    },
     async postReview() {
       if (this.review === "" || this.review === null) return;
       const res = await axios.post(`/reviews`, {
         customer_id: parseInt(this.currentCustomerId),
         product_id: parseInt(this.productId),
         message: this.review,
-        rating: this.rating
+        rating: this.rating,
       });
       this.review = "";
       this.reviews.unshift(res.data);
+    },
+    async postReviewReply(review) {
+      if (review.reply === "" || review.reply === null) return;
+      const res = await axios.post(`/review-replies`, {
+        customer_id: parseInt(this.currentCustomerId),
+        review_id: parseInt(review.id),
+        message: review.reply,
+      });
+      review.reply = "";
+      review.replies.unshift(res.data);
     },
 
     async deleteComment(id) {
       await axios.delete(`/comments/${id}`);
       this.comments = this.comments.filter((comment) => comment.id !== id);
+    
+      this.$buefy.dialog.alert({
+        title: "Delete Successful",
+        message:
+          "Comment deleted successfully.",
+        type: "is-success",
+        hasIcon: true,
+        icon: "check-circle",
+        iconPack: "fa",
+      });
     },
 
     async deleteReview(id) {
       await axios.delete(`/reviews/${id}`);
       this.reviews = this.reviews.filter((review) => review.id !== id);
+    
+      this.$buefy.dialog.alert({
+        title: "Delete Successful",
+        message:
+          "Review deleted successfully.",
+        type: "is-success",
+        hasIcon: true,
+        icon: "check-circle",
+        iconPack: "fa",
+      });
     },
+
+    async deleteCommentReply(id, comment) {
+      await axios.delete(`/comment-replies/${id}`);
+      comment.replies = comment.replies.filter((reply) => reply.id !== id);
+    
+      this.$buefy.dialog.alert({
+        title: "Delete Successful",
+        message:
+          "Reply deleted successfully.",
+        type: "is-success",
+        hasIcon: true,
+        icon: "check-circle",
+        iconPack: "fa",
+      });
+    },
+
+    async deleteReviewReply(id, review) {
+      await axios.delete(`/review-replies/${id}`);
+      review.replies = review.replies.filter((reply) => reply.id !== id);
+
+      this.$buefy.dialog.alert({
+        title: "Delete Successful",
+        message:
+          "Reply deleted successfully.",
+        type: "is-success",
+        hasIcon: true,
+        icon: "check-circle",
+        iconPack: "fa",
+      });
+    },
+
     async addToCart() {
       await axios.post(`/carts`, {
         customer_id: parseInt(this.currentCustomerId),
