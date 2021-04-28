@@ -204,7 +204,7 @@ export default {
       }
     },
     formatDate(date) {
-      return moment(String(date)).format("DD MMMM YYYY h:mm a");
+      return moment(String(date)).format("DD MMMM YYYY");
     },
   },
 };

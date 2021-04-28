@@ -4,17 +4,6 @@
   <!-- ----------------------------------------------------------------------------- -->
   <div>
     <div class="mt-4">
-      <v-tabs
-        fixed-tabs
-        background-color="white"
-        v-model="currentTab"
-        @change="filterTransactions(currentTab)"
-      >
-        <v-tab> Waiting for Confirmation </v-tab>
-        <v-tab> Processed </v-tab>
-        <v-tab> Shipped </v-tab>
-        <v-tab> Arrived </v-tab>
-      </v-tabs>
       <div
         class="columns is-centered"
         style="align-items: center; min-height: 100vh"
@@ -22,11 +11,11 @@
         <div class="column is-four-fifths">
           <div class="card">
             <div class="card-content">
-              <h1 class="title cart-header"><b>Transaction History</b></h1>
+              <h1 class="title cart-header"><b>Waiting for Confirmation</b></h1>
               <div></div>
               <div class="content" style="margin-bottom: 0">
                 <b-table
-                  :data="displayedData ? displayedData : []"
+                  :data="displayedData"
                   :hoverable="true"
                   :loading="isLoading"
                 >
@@ -49,7 +38,8 @@
                   </b-table-column>
 
                   <b-table-column field="action" label="Action" v-slot="props">
-                    <router-link
+                      <b-button type="is-primary" @click="updateTransaction(props.row.id)">Process Transaction</b-button>
+                      <router-link
                       :to="{ path: '/transactions/' + props.row.id }"
                     >
                       <b-button type="is-white" icon-right="search" />
@@ -133,6 +123,8 @@ export default {
       try {
         const res = await axios.get("/transactions/" + this.currentCustomerId);
         this.data = res.data;
+
+        this.filterTransactions();
       } catch (error) {
         this.data = [];
       }
@@ -140,29 +132,39 @@ export default {
     formatDate(date) {
       return moment(String(date)).format("DD MMMM YYYY");
     },
-    
-    filterTransactions(currentTab) {
-      var shipmentStatus = null;
-      switch (currentTab) {
-        case 0:
-          shipmentStatus = "Waiting for Confirmation"
-          break;
-        case 1:
-          shipmentStatus = "Processed"
-          break;
-        case 2:
-          shipmentStatus = "Shipped"
-          break;
-        case 3:
-          shipmentStatus = "Arrived"
-          break;
-        default:
-        // code block
-      }
+
+    filterTransactions() {
+      const shipmentStatus = "Waiting for Confirmation";
       this.displayedData = this.data.filter(
         (transaction) => transaction.shipment_status == shipmentStatus
       );
     },
+
+    async updateTransaction(transaction_id) {
+      console.log(transaction_id);
+      await axios.post('/shipment-statuses', {
+        transaction_id: transaction_id,
+        status: 'Processed'
+      });
+
+      await axios.put('/transactions/' + transaction_id, {
+        shipment_status: 'Processed'
+      });
+
+      this.displayedData = this.displayedData.filter(
+        (transaction) => transaction.id !== transaction_id
+      );
+
+      this.$buefy.dialog.alert({
+        title: "Process Successful",
+        message:
+          "Product processed successfully!",
+        type: "is-success",
+        hasIcon: true,
+        icon: "check-circle",
+        iconPack: "fa",
+      });
+    }
   },
 };
 </script>

@@ -14,6 +14,10 @@ import Transactions from '../views/Transactions.vue';
 import DetailTransaction from '../views/DetailTransaction.vue';
 import Chat from '../views/chat/Chat.vue';
 import ChatAdmin from '../views/chat/ChatAdmin.vue';
+import WaitingForConfirmation from '../views/WaitingForConfirmation.vue';
+import Processed from '../views/Processed.vue';
+import Shipped from '../views/Shipped.vue';
+import Arrived from '../views/Arrived.vue';
 
 const routes = [
   {
@@ -62,9 +66,34 @@ const routes = [
     component: Chat,
   },
   {
-    path: '/chat-admin',
+    path: '/admin/chat',
     name: 'ChatAdmin',
     component: ChatAdmin,
+  },
+  {
+    path: '/admin/waiting-for-confirmation',
+    name: 'WaitingForConfirmation',
+    component: WaitingForConfirmation,
+  },
+  {
+    path: '/admin/processed',
+    name: 'Processed',
+    component: Processed,
+  },
+  {
+    path: '/admin/shipped',
+    name: 'Shipped',
+    component: Shipped,
+  },
+  {
+    path: '/admin/arrived',
+    name: 'Arrived',
+    component: Arrived,
+  },
+  {
+    path: 'admin/product/:categoryId/:productId',
+    name: 'detailProduct',
+    component: DetailProduct,
   },
 ];
 

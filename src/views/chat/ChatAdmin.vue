@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%">
-    <v-app style="width: 150vh">
-      <v-container class="chat-app" style="width: 100%">
+    <v-app style="">
+      <v-container class="chat-app" style="width: 50%">
         <v-card class="d-flex flex-row">
           <div style="width: 25%">
             <!---/Left chat list -->
