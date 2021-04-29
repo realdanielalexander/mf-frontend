@@ -123,6 +123,24 @@
             </p>
           </div>
 
+          <div v-if="data.promo!=''" class="level is-flex" style="padding: 0 24px">
+            <p><strong>Promo Code</strong></p>
+            <p>
+              <strong
+                >{{data.promo}}</strong
+              >
+            </p>
+          </div>
+
+          <div class="level is-flex" style="padding: 0 24px">
+            <p><strong>Payment Method</strong></p>
+            <p>
+              <strong
+                >{{data.payment_method}}</strong
+              >
+            </p>
+          </div>
+
           <hr style="background-color: black; margin: 24px 0" />
 
           <div class="level">
@@ -189,6 +207,7 @@ export default {
           "/transactions/" + this.currentCustomerId + "/" + this.transactionId
         );
         this.data = res.data;
+        console.log(this.data);
       } catch (error) {
         this.data = [];
       }

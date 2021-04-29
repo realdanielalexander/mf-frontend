@@ -120,8 +120,9 @@ export default {
       user: "",
     };
   },
-  mounted() {
-    this.fetchData();
+  async mounted() {
+    await this.fetchData();
+    await this.filterTransactions(0);
   },
   computed: {
     getTotalBill: function () {

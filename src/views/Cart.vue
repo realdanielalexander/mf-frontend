@@ -150,24 +150,102 @@
       :destroy-on-hide="false"
     >
       <form action="">
-        <div class="modal-card" style="width: 500px">
+        <div class="modal-card" style="width: 1000px">
           <header class="modal-card-head">
             <p class="modal-card-title">Pay the Bill</p>
           </header>
           <section class="modal-card-body">
             <b-field label="Total">
-              <b-input name="form.total" :value="getTotalBill" disabled>
-              </b-input>
+              <b-input name="total" :value="getTotalBill" disabled> </b-input>
             </b-field>
-            <b-field label="Pay Method">
+            <!-- <b-field label="Pay Method">
               <b-select
-                v-model="form.method"
+                v-model="method"
                 placeholder="Select a pay method"
                 expanded
               >
                 <option value="Cash">Cash</option>
                 <option value="Transfer">Transfer</option>
               </b-select>
+            </b-field> -->
+            <b-field label="Payment Method">
+              <v-item-group v-model="selectedMethod">
+                <v-container>
+                  <v-row>
+                    <v-col
+                      v-for="paymentMethod in paymentMethods"
+                      :key="paymentMethod.id"
+                      cols="12"
+                      md="4"
+                    >
+                      <v-item v-slot="{ active, toggle }">
+                        <v-card
+                          :color="active ? 'primary' : ''"
+                          class="d-flex align-center"
+                          dark
+                          height="200"
+                          @click="toggle"
+                        >
+                          <v-img
+                            height="200px"
+                            :src="require(`@/${paymentMethod.image}`)"
+                          />
+                          <v-fade-transition>
+                            <v-overlay v-if="active" absolute color="#000000">
+                              <v-icon dark x-large color="green">
+                                mdi-checkbox-marked-circle
+                              </v-icon>
+                            </v-overlay>
+                          </v-fade-transition>
+                        </v-card>
+                      </v-item>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-item-group>
+            </b-field>
+            <b-field label="Promo Code">
+              <v-card>
+                <v-card-text>
+                  <v-autocomplete
+                    v-model="promo"
+                    :items="items"
+                    :loading="isLoading"
+                    :search-input.sync="search"
+                    hide-no-data
+                    hide-selected
+                    item-text="code"
+                    item-value="id"
+                    placeholder="Start typing to Search"
+                    return-object
+                  ></v-autocomplete>
+                </v-card-text>
+                <v-expand-transition>
+                  <v-list v-if="promo" class="lighten-3">
+                    <v-list-item v-for="(field, i) in fields" :key="i">
+                      <v-list-item-content>
+                        <v-list-item-title
+                          v-text="field.value"
+                        ></v-list-item-title>
+                        <v-list-item-subtitle
+                          v-text="field.key"
+                        ></v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-expand-transition>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    :disabled="!promo"
+                    color="white"
+                    @click="promo = null"
+                  >
+                    Clear
+                    <v-icon right> mdi-close-circle </v-icon>
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
             </b-field>
           </section>
           <footer class="modal-card-foot">
@@ -178,10 +256,11 @@
             >
             <b-button
               type="is-primary"
-              :disabled="form.method == ''"
+              :disabled="!paymentAllowed()"
               @click="postTransaction()"
               >Continue to Pay</b-button
             >
+            <div class="ml-8">{{ message }}</div>
           </footer>
         </div>
       </form>
@@ -198,10 +277,9 @@ export default {
   data() {
     const data = [];
     return {
-      form: {
-        method: "",
-        total: 1000000,
-      },
+      method: "",
+      total: null,
+      promo: null,
 
       // model for table
       quantities: [],
@@ -216,14 +294,69 @@ export default {
       // customers
       customers: [],
       user: "",
+
+      // payment methods
+      paymentMethods: [],
+      selectedMethod: null,
+
+      //autocomplete promo code
+      entries: [],
+      employee: null,
+      search: null,
+      count: 0,
+      message: "",
     };
   },
   mounted() {
     this.fetchData();
+    this.fetchPaymentMethods();
   },
   computed: {
     getTotalBill: function () {
       return "Rp " + parseInt(this.calculateTotal()).toLocaleString("id-ID");
+    },
+
+    fields() {
+      if (!this.promo) return [];
+
+      return Object.keys(this.promo).map((key) => {
+        return {
+          key,
+          value: this.promo[key] || "n/a",
+        };
+      });
+    },
+    items() {
+      return this.entries.map((entry) => {
+        const code = entry.code;
+        const id = entry.id;
+
+        return Object.assign({}, entry, { id, code });
+      });
+    },
+  },
+  watch: {
+    search() {
+      // Items have already been loaded
+      if (this.items.length > 0) return;
+
+      // Items have already been requested
+      if (this.isLoading) return;
+
+      this.isLoading = true;
+
+      // Lazily load input items
+      fetch(`http://localhost:8080/promos`)
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+          this.count = res.length;
+          this.entries = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => (this.isLoading = false));
     },
   },
   methods: {
@@ -234,6 +367,11 @@ export default {
           total += item.quantity * item.price;
         }
       });
+
+      if (this.promo && this.message === "") {
+        total = total - this.promo.amount;
+      }
+
       return total;
     },
     checkValidity() {
@@ -246,10 +384,43 @@ export default {
       });
       return isValid;
     },
+    paymentAllowed() {
+      var isValid = true;
+      if (this.selectedMethod === undefined || this.selectedMethod === null) {
+        isValid = false;
+        this.message = "Please select your desired payment method.";
+      }
+      else if (this.promo && (this.calculateTotal() <= this.promo.minimum_order)) {
+        isValid = false;
+        this.message =
+          "Your total payment is not sufficient for this promo code.";
+      }
+      else if (this.promo && moment(Date.now()).isAfter(this.promo.valid_to)) {
+        isValid = false;
+        this.message = "Your promo code has expired.";
+      }
+      else if (this.promo && moment(Date.now()).isBefore(this.promo.valid_from)) {
+        isValid = false;
+        this.message = "Your promo is not valid yet.";
+      }
+      else if (isValid) {   
+        this.message = "";
+      }
+
+      return isValid;
+    },
     async fetchData() {
       try {
         const res = await axios.get("/carts/" + this.currentCustomerId);
         this.data = res.data;
+      } catch (error) {
+        this.data = [];
+      }
+    },
+    async fetchPaymentMethods() {
+      try {
+        const res = await axios.get("/payment-methods");
+        this.paymentMethods = res.data;
       } catch (error) {
         this.data = [];
       }
@@ -269,7 +440,9 @@ export default {
       });
     },
     async deleteFromCart(item) {
-      await axios.delete("/carts/" + this.currentCustomerId + "/" + item.id);
+      await axios.delete(
+        "/carts/" + this.currentCustomerId + "/" + item.variation_id
+      );
       await this.fetchData();
     },
     async postTransaction() {
@@ -281,24 +454,27 @@ export default {
         };
         products.push(product);
       });
+      
       var transaction = {
         customer_id: parseInt(this.currentCustomerId),
         date: moment(Date.now()).format("YYYY-MM-DDTHH:mm:ssZ"),
         products: products,
+        payment_method: this.paymentMethods[this.selectedMethod].name,
+        promo: this.promo ? this.promo.code : '',
+        total: this.calculateTotal(),
       };
-      console.log(transaction);
       
       var transactionResult = await axios.post("/transactions", transaction);
       var shipmentStatus = {
-          transaction_id: transactionResult.data.id,
-          status: "Waiting for Confirmation"
+        transaction_id: transactionResult.data.id,
+        status: "Waiting for Confirmation",
       };
+
       await axios.post("/shipment-statuses", shipmentStatus);
-      
+
       this.$buefy.dialog.alert({
         title: "Payment Successful",
-        message:
-          "Thank you for shopping at Millennial Fashion!",
+        message: "Thank you for shopping at Millennial Fashion!",
         type: "is-success",
         hasIcon: true,
         icon: "check-circle",

@@ -5,10 +5,12 @@
         v-bind:customers="customers"
         :currentCustomerId="currentCustomerId"
         v-on:change-user="onSelect"
+        v-if="!$route.path.includes('admin')"
       />
       <router-view v-bind:currentCustomerId="currentCustomerId" />
       <Footer />
       <v-navigation-drawer
+        v-if="$route.path.includes('admin')"
         v-model="sidebar"
         mobile-breakpoint="960"
         clipped
@@ -21,9 +23,7 @@
         <!--- Progress -->
         <v-list-item two-line>
           <v-list-item-content class>
-            <v-list-item-title class="d-flex mb-3 align-center">
-              <b class="title text-bold">Millenial Admin</b>
-            </v-list-item-title>
+            <img src="@/assets/millenial_fashion.png" />
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>

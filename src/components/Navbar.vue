@@ -51,6 +51,11 @@
         </b-icon>
         <span style="margin-left: 0.5rem">Customer Service</span>
       </b-navbar-item>
+      <b-navbar-item href="/admin/waiting-for-confirmation">
+        <b-icon pack="fas" icon="user-lock" size="is-small" type="is-primary">
+        </b-icon>
+        <span style="margin-left: 0.5rem">Admin</span>
+      </b-navbar-item>
     </template>
     <template slot="end">
       <b-navbar-item>
