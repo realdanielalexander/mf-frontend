@@ -139,20 +139,6 @@
                 <v-col cols="2"> </v-col>
                 <v-col cols="8">
                   <p class="font-weight-bold">Comments</p>
-
-                  <div class="reply d-flex">
-                    <v-text-field
-                      type="text"
-                      v-model.trim="comment"
-                      placeholder="Leave a comment..."
-                      maxlength="250"
-                      required
-                      @keyup.enter="postComment"
-                    />
-                    <button class="reply--button" @click.prevent="postComment">
-                      <i class="fa fa-paper-plane"></i>Send
-                    </button>
-                  </div>
                   <div
                     v-for="comment in comments"
                     :key="comment.id"
@@ -190,34 +176,8 @@
                           type="is-danger"
                           icon-right="trash"
                         />
-                        <!-- <b-button
-                          v-if="
-                            this &&
-                            parseInt(comment.customer_id) ==
-                              parseInt(this.$props.currentCustomerId)
-                          "
-                          @click="deleteComment(comment.id)"
-                          type="is-danger"
-                          icon-right="trash"
-                      /> -->
                       </v-col>
                     </v-row>
-                    <div class="reply d-flex">
-                      <v-text-field
-                        type="text"
-                        v-model.trim="comment.reply"
-                        placeholder="Leave a reply..."
-                        maxlength="250"
-                        required
-                        @keyup.enter="postCommentReply(comment)"
-                      />
-                      <button
-                        class="reply--button"
-                        @click.prevent="postCommentReply(comment)"
-                      >
-                        <i class="fa fa-paper-plane"></i>Send
-                      </button>
-                    </div>
                     <b v-if="comment.replies && comment.replies.length > 0">Replies:</b>
                     <v-row
                       v-for="reply in comment.replies"
@@ -254,16 +214,6 @@
                           type="is-danger"
                           icon-right="trash"
                         />
-                        <!-- <b-button
-                          v-if="
-                            this &&
-                            parseInt(comment.customer_id) ==
-                              parseInt(this.$props.currentCustomerId)
-                          "
-                          @click="deleteComment(comment.id)"
-                          type="is-danger"
-                          icon-right="trash"
-                      /> -->
                       </v-col>
                     </v-row>
                   </div>
@@ -276,31 +226,6 @@
                 <v-col cols="2"> </v-col>
                 <v-col cols="8">
                   <p class="font-weight-bold">Reviews</p>
-
-                  <div class="d-flex align-center">
-                    <div>
-                      <p class="mr-3">Rate your recent purchase</p>
-                      <v-rating
-                        class="px-0 mx-0"
-                        hover
-                        dense
-                        length="5"
-                        small
-                        v-model="rating"
-                      ></v-rating>
-                    </div>
-                    <v-text-field
-                      type="text"
-                      v-model.trim="review"
-                      placeholder="Leave a review..."
-                      maxlength="250"
-                      required
-                      @keyup.enter="postReview"
-                    />
-                    <button class="reply--button" @click.prevent="postReview">
-                      <i class="fa fa-paper-plane"></i>Send
-                    </button>
-                  </div>
                   <div
                     v-for="review in reviews"
                     :key="review.id"
@@ -343,38 +268,12 @@
                       </v-col>
                       <v-col cols="3"
                         ><b-button
-                          @click="deleteComment(review.id)"
+                          @click="deleteReview(review.id)"
                           type="is-danger"
                           icon-right="trash"
                         />
-                        <!-- <b-button
-                          v-if="
-                            this &&
-                            parseInt(comment.customer_id) ==
-                              parseInt(this.$props.currentCustomerId)
-                          "
-                          @click="deleteComment(comment.id)"
-                          type="is-danger"
-                          icon-right="trash"
-                      /> -->
                       </v-col>
                     </v-row>
-                    <div class="reply d-flex">
-                      <v-text-field
-                        type="text"
-                        v-model.trim="review.reply"
-                        placeholder="Leave a reply..."
-                        maxlength="250"
-                        required
-                        @keyup.enter="postReviewReply(review)"
-                      />
-                      <button
-                        class="reply--button"
-                        @click.prevent="postReviewReply(review)"
-                      >
-                        <i class="fa fa-paper-plane"></i>Send
-                      </button>
-                    </div>
                     <b v-if="review.replies && review.replies.length > 0">Replies:</b>
                     <v-row
                       v-for="reply in review.replies"
@@ -411,16 +310,6 @@
                           type="is-danger"
                           icon-right="trash"
                         />
-                        <!-- <b-button
-                          v-if="
-                            this &&
-                            parseInt(comment.customer_id) ==
-                              parseInt(this.$props.currentCustomerId)
-                          "
-                          @click="deleteComment(comment.id)"
-                          type="is-danger"
-                          icon-right="trash"
-                      /> -->
                       </v-col>
                     </v-row>
                   </div>
