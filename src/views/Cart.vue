@@ -1,4 +1,12 @@
 <template>
+<div>
+  <div class="align-self-stretch pl-2 py-0 white">
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:divider>
+          <v-icon>mdi-chevron-right</v-icon>
+        </template>
+      </v-breadcrumbs>
+    </div>
   <div
     class="columns is-centered"
     style="align-items: center; min-height: 100vh"
@@ -236,11 +244,7 @@
                 </v-expand-transition>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn
-                    :disabled="!promo"
-                    color="white"
-                    @click="promo = null"
-                  >
+                  <v-btn :disabled="!promo" color="white" @click="promo = null">
                     Clear
                     <v-icon right> mdi-close-circle </v-icon>
                   </v-btn>
@@ -309,6 +313,7 @@
       </form>
     </b-modal>
   </div>
+  </div>
 </template>
 
 <script>
@@ -353,9 +358,19 @@ export default {
       searchCourier: null,
       courierCount: 0,
 
-
-
       message: "",
+
+      
+      breadcrumbs: [
+        {
+          text: "Home",
+          disabled: false,
+        },
+        {
+          text: "Cart",
+          disabled: true,
+        },
+      ],
     };
   },
   mounted() {
@@ -462,8 +477,8 @@ export default {
       });
 
       if (this.promo && this.message === "") {
-        if(this.promo.percentage) {
-          const amount = total * this.promo.amount/100;
+        if (this.promo.percentage) {
+          const amount = (total * this.promo.amount) / 100;
           console.log(amount);
           total = total - amount;
         } else {
@@ -492,21 +507,26 @@ export default {
       if (this.selectedMethod === undefined || this.selectedMethod === null) {
         isValid = false;
         this.message = "Please select your desired payment method.";
-      }
-      else if (this.promo && (this.calculateTotal() <= this.promo.minimum_order)) {
+      } else if (
+        this.promo &&
+        this.calculateTotal() <= this.promo.minimum_order
+      ) {
         isValid = false;
         this.message =
           "Your total payment is not sufficient for this promo code.";
-      }
-      else if (this.promo && moment(Date.now()).isAfter(this.promo.valid_to)) {
+      } else if (
+        this.promo &&
+        moment(Date.now()).isAfter(this.promo.valid_to)
+      ) {
         isValid = false;
         this.message = "Your promo code has expired.";
-      }
-      else if (this.promo && moment(Date.now()).isBefore(this.promo.valid_from)) {
+      } else if (
+        this.promo &&
+        moment(Date.now()).isBefore(this.promo.valid_from)
+      ) {
         isValid = false;
         this.message = "Your promo is not valid yet.";
-      }
-      else if (isValid) {   
+      } else if (isValid) {
         this.message = "";
       }
 
@@ -557,16 +577,16 @@ export default {
         };
         products.push(product);
       });
-      
+
       var transaction = {
         customer_id: parseInt(this.currentCustomerId),
         date: moment(Date.now()).format("YYYY-MM-DDTHH:mm:ssZ"),
         products: products,
         payment_method: this.paymentMethods[this.selectedMethod].name,
-        promo: this.promo ? this.promo.code : '',
+        promo: this.promo ? this.promo.code : "",
         total: this.calculateTotal(),
       };
-      
+
       var transactionResult = await axios.post("/transactions", transaction);
       var shipmentStatus = {
         transaction_id: transactionResult.data.id,

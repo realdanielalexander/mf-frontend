@@ -1,29 +1,17 @@
 <template>
   <div class="columns is-vcentered is-flex" style="flex-direction: column">
+    <div class="align-self-stretch pl-2 py-0 white">
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:divider>
+          <v-icon>mdi-chevron-right</v-icon>
+        </template>
+      </v-breadcrumbs>
+    </div>
     <div class="column">
       <h1 style="padding: 12px 48px" class="has-text-centered title">
         Your Wishlist
       </h1>
     </div>
-    <!-- <div>
-      <b-field>
-        <b-select
-          placeholder="Select a customer"
-          icon="user"
-          value="user"
-          @onSelect="onSelect"
-        >
-          <option
-            v-for="(customer, index) in customers"
-            :key="customer.id"
-            :index="index"
-            value="customer.id"
-          >
-            {{ customer.name }}
-          </option>
-        </b-select>
-      </b-field>
-    </div> -->
     <div
       v-if="products.length != 0"
       class="columns is-multiline"
@@ -105,6 +93,17 @@ export default {
     return {
       isLoading: false,
       products: [],
+      
+      breadcrumbs: [
+        {
+          text: "Home",
+          disabled: false,
+        },
+        {
+          text: "Wishlist",
+          disabled: true,
+        },
+      ],
     };
   },
   methods: {

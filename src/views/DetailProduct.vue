@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="align-self-stretch pl-2 py-0 white">
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:divider>
+          <v-icon>mdi-chevron-right</v-icon>
+        </template>
+      </v-breadcrumbs>
+    </div>
     <div
       class="columns is-multiline is-flex"
       style="align-items: center; min-height: 75vh"
@@ -187,7 +194,7 @@
                         <i class="fa fa-paper-plane"></i>Send
                       </button>
                     </div>
-                    <b v-if="comment.replies.length > 0">Replies:</b>
+                    <b v-if="comment.replies && comment.replies.length > 0">Replies:</b>
                     <v-row
                       v-for="reply in comment.replies"
                       :key="reply.id"
@@ -310,7 +317,7 @@
                         <i class="fa fa-paper-plane"></i>Send
                       </button>
                     </div>
-                    <b v-if="review.replies.length > 0">Replies:</b>
+                    <b v-if="review.replies && review.replies.length > 0">Replies:</b>
                     <v-row
                       v-for="reply in review.replies"
                       :key="reply.id"
@@ -368,13 +375,26 @@ export default {
       reviews: [],
       comment: null,
       review: null,
-      commentReply: null,
       rating: 5,
       selectedVariation: null,
       selectedStock: null,
       tab: null,
       prices: [],
       isLoading: false,
+      breadcrumbs: [
+        {
+          text: "Home",
+          disabled: false,
+        },
+        {
+          text: "Market",
+          disabled: false,
+        },
+        {
+          text: "Product",
+          disabled: true,
+        },
+      ],
 
       // modal
       isComponentModalActive: false,
@@ -428,6 +448,7 @@ export default {
         product_id: parseInt(this.productId),
         message: this.comment,
       });
+      console.log(res.data);
       this.comment = "";
       this.comments.unshift(res.data);
     },

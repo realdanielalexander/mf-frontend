@@ -3,42 +3,54 @@
     class="columns is-centered"
     style="align-items: center; min-height: 100vh"
   >
+    <div class="align-self-stretch pl-2 py-0 white">
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:divider>
+          <v-icon>mdi-chevron-right</v-icon>
+        </template>
+      </v-breadcrumbs>
+    </div>
     <div class="column is-four-fifths">
       <div class="card">
         <div class="card-content">
           <h1 class="title cart-header">
             <b>{{ "Transaction " + formatDate(this.data.date) }}</b>
           </h1>
-          <!-- ----------------------------------------------------------------------------- -->
-          <!-- SteppersOptional -->
-          <!-- ----------------------------------------------------------------------------- -->
           <div class="content">
             <div class="mt-4">
               <v-stepper v-model="shipmentStatuses.length" class="mt-12">
                 <v-stepper-header>
                   <v-stepper-step step="1"
                     >Waiting for Confirmation
-                    <small v-if="this.shipmentStatuses.length >= 1">{{ formatDate(this.shipmentStatuses[0].created_at)}}</small>
+                    <small v-if="this.shipmentStatuses.length >= 1">{{
+                      formatDate(this.shipmentStatuses[0].created_at)
+                    }}</small>
                   </v-stepper-step>
                   <v-divider></v-divider>
 
                   <v-stepper-step step="2">
                     Processed
-                    <small v-if="this.shipmentStatuses.length >= 2">{{ formatDate(this.shipmentStatuses[1].created_at)}}</small>
+                    <small v-if="this.shipmentStatuses.length >= 2">{{
+                      formatDate(this.shipmentStatuses[1].created_at)
+                    }}</small>
                   </v-stepper-step>
 
                   <v-divider></v-divider>
 
                   <v-stepper-step step="3">
                     Shipped
-                    <small v-if="this.shipmentStatuses.length >= 3">{{ formatDate(this.shipmentStatuses[2].created_at)}}</small>
+                    <small v-if="this.shipmentStatuses.length >= 3">{{
+                      formatDate(this.shipmentStatuses[2].created_at)
+                    }}</small>
                   </v-stepper-step>
 
                   <v-divider></v-divider>
 
                   <v-stepper-step step="4">
                     Arrived
-                    <small v-if="this.shipmentStatuses.length >= 4">{{ formatDate(this.shipmentStatuses[3].created_at)}}</small>
+                    <small v-if="this.shipmentStatuses.length >= 4">{{
+                      formatDate(this.shipmentStatuses[3].created_at)
+                    }}</small>
                   </v-stepper-step>
 
                   <v-divider></v-divider>
@@ -123,21 +135,21 @@
             </p>
           </div>
 
-          <div v-if="data.promo!=''" class="level is-flex" style="padding: 0 24px">
+          <div
+            v-if="data.promo != ''"
+            class="level is-flex"
+            style="padding: 0 24px"
+          >
             <p><strong>Promo Code</strong></p>
             <p>
-              <strong
-                >{{data.promo}}</strong
-              >
+              <strong>{{ data.promo }}</strong>
             </p>
           </div>
 
           <div class="level is-flex" style="padding: 0 24px">
             <p><strong>Payment Method</strong></p>
             <p>
-              <strong
-                >{{data.payment_method}}</strong
-              >
+              <strong>{{ data.payment_method }}</strong>
             </p>
           </div>
 
@@ -188,6 +200,21 @@ export default {
       customers: [],
       shipmentStatuses: [],
       user: "",
+
+      breadcrumbs: [
+        {
+          text: "Home",
+          disabled: false,
+        },
+        {
+          text: "Transactions History",
+          disabled: false,
+        },
+        {
+          text: "Transaction",
+          disabled: true,
+        },
+      ],
     };
   },
   mounted() {

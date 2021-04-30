@@ -1,8 +1,12 @@
 <template>
-  <!-- ----------------------------------------------------------------------------- -->
-  <!-- TabsFixed -->
-  <!-- ----------------------------------------------------------------------------- -->
   <div>
+    <div class="align-self-stretch pl-2 py-0 white">
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:divider>
+          <v-icon>mdi-chevron-right</v-icon>
+        </template>
+      </v-breadcrumbs>
+    </div>
     <div class="mt-4">
       <v-tabs
         fixed-tabs
@@ -118,6 +122,16 @@ export default {
       shipmentStatus: null,
       currentTab: null,
       user: "",
+      breadcrumbs: [
+        {
+          text: "Home",
+          disabled: false,
+        },
+        {
+          text: "Transactions History",
+          disabled: true,
+        },
+      ],
     };
   },
   async mounted() {

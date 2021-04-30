@@ -7,7 +7,6 @@ import Buefy from 'buefy';
 import Axios from 'axios';
 import VueAxios from 'vue-axios';
 import LoadScript from 'vue-plugin-load-script';
-import "./plugins/base";
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 // internal icons

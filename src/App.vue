@@ -23,7 +23,7 @@
         <!--- Progress -->
         <v-list-item two-line>
           <v-list-item-content class>
-            <img src="@/assets/millenial_fashion.png" />
+            <img src="@/assets/millenial_fashion.jpg" />
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>

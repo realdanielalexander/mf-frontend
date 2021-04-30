@@ -1,65 +1,118 @@
 <template>
-  <b-navbar style="background-color: white; padding: 16px" shadow>
+  <b-navbar transparent style="background-color: #222222; padding: 16px" shadow>
     <template slot="brand">
-      <b-navbar-item tag="router-link" :to="{ path: '/' }">
-        <img src="@/assets/millenial_fashion.png" />
+      <b-navbar-item
+        style="background-color: #222222"
+        tag="router-link"
+        :to="{ path: '/' }"
+      >
+        <img src="@/assets/millenial_fashion.jpg" />
       </b-navbar-item>
     </template>
-    <template slot="start">
-      <b-navbar-item href="/">
-        <b-icon pack="fas" icon="home" size="is-small" type="is-primary">
-        </b-icon>
-        <span style="margin-left: 0.5rem">Home</span>
-      </b-navbar-item>
-      <b-navbar-item href="/market">
+    <template slot="start" style="background-color: #222222">
+      <b-navbar-item style="background-color: #222222" href="/">
         <b-icon
+          class="white--text"
+          variant="dark"
+          pack="fas"
+          icon="home"
+          size="is-small"
+          type="is-primary"
+        >
+        </b-icon>
+        <span class="white--text" style="margin-left: 0.5rem">Home</span>
+      </b-navbar-item>
+      <b-navbar-item style="background-color: #222222" href="/market">
+        <b-icon
+          class="white--text"
           pack="fas"
           icon="shopping-bag"
           size="is-small"
           type="is-primary"
         >
         </b-icon>
-        <span style="margin-left: 0.5rem">Market</span>
+        <span class="white--text" style="margin-left: 0.5rem">Market</span>
       </b-navbar-item>
-      <b-navbar-item href="/cart">
+      <b-navbar-item style="background-color: #222222" href="/cart">
         <b-icon
+          class="white--text"
           pack="fas"
           icon="shopping-cart"
           size="is-small"
           type="is-primary"
         >
         </b-icon>
-        <span style="margin-left: 0.5rem">Cart</span>
+        <span class="white--text" style="margin-left: 0.5rem">Cart</span>
       </b-navbar-item>
-      <b-navbar-item href="/wishlist">
-        <b-icon pack="fas" icon="heart" size="is-small" type="is-primary">
+      <b-navbar-item style="background-color: #222222" href="/wishlist">
+        <b-icon
+          class="white--text"
+          pack="fas"
+          icon="heart"
+          size="is-small"
+          type="is-primary"
+        >
         </b-icon>
-        <span style="margin-left: 0.5rem">Wishlist</span>
+        <span class="white--text" style="margin-left: 0.5rem">Wishlist</span>
       </b-navbar-item>
-      <b-navbar-item href="/transactions">
-        <b-icon pack="fas" icon="history" size="is-small" type="is-primary">
+      <b-navbar-item style="background-color: #222222" href="/transactions">
+        <b-icon
+          class="white--text"
+          pack="fas"
+          icon="history"
+          size="is-small"
+          type="is-primary"
+        >
         </b-icon>
-        <span style="margin-left: 0.5rem">Transactions</span>
+        <span class="white--text" style="margin-left: 0.5rem"
+          >Transactions</span
+        >
       </b-navbar-item>
-      <b-navbar-item href="/signup">
-        <b-icon pack="fas" icon="user" size="is-small" type="is-primary">
+      <b-navbar-item style="background-color: #222222" href="/signup">
+        <b-icon
+          class="white--text"
+          pack="fas"
+          icon="user"
+          size="is-small"
+          type="is-primary"
+        >
         </b-icon>
-        <span style="margin-left: 0.5rem">New User</span>
+        <span class="white--text" style="margin-left: 0.5rem">New User</span>
       </b-navbar-item>
-      <b-navbar-item href="/chat">
-        <b-icon pack="fas" icon="comments" size="is-small" type="is-primary">
+      <b-navbar-item style="background-color: #222222" href="/chat">
+        <b-icon
+          class="white--text"
+          pack="fas"
+          icon="comments"
+          size="is-small"
+          type="is-primary"
+        >
         </b-icon>
-        <span style="margin-left: 0.5rem">Customer Service</span>
+        <span
+          class="white--text"
+          style="background-color: #222222; margin-left: 0.5rem"
+          >Customer Service</span
+        >
       </b-navbar-item>
-      <b-navbar-item href="/admin/waiting-for-confirmation">
-        <b-icon pack="fas" icon="user-lock" size="is-small" type="is-primary">
+      <b-navbar-item
+        style="background-color: #222222"
+        href="/admin/waiting-for-confirmation"
+      >
+        <b-icon
+          class="white--text"
+          pack="fas"
+          icon="user-lock"
+          size="is-small"
+          type="is-primary"
+        >
         </b-icon>
-        <span style="margin-left: 0.5rem">Admin</span>
+        <span class="white--text" style="margin-left: 0.5rem">Admin</span>
       </b-navbar-item>
     </template>
     <template slot="end">
-      <b-navbar-item>
+      <b-navbar-item style="background-color: #222222">
         <v-menu
+          style="background-color: #222222"
           bottom
           left
           offset-y
@@ -67,9 +120,16 @@
           transition="scale-transition"
         >
           <template v-slot:activator="{ on }">
-            <v-btn icon v-on="on" class="mr-1" @click="updateNotifications">
+            <v-btn
+              plain
+              icon
+              v-on="on"
+              class="mr-1"
+              @click="updateNotifications"
+            >
               <v-badge :value="unread" color="red" dot>
                 <b-icon
+                  class="white--text"
                   pack="fas"
                   icon="bell"
                   size="is-small"
@@ -116,7 +176,12 @@
                     <small class="text--secondary">{{ item.time }}</small>
                   </div>
                   <div>
-                    <h4 v-if="!item.isRead" class="font-weight-medium red--text">NEW</h4>
+                    <h4
+                      v-if="!item.isRead"
+                      class="font-weight-medium red--text ml-8"
+                    >
+                      NEW
+                    </h4>
                   </div>
                 </div>
               </v-list-item-title>
@@ -127,9 +192,10 @@
       <!-- ---------------------------------- -->
       <!---Notification -->
       <!-- ---------------------------------- -->
-      <b-navbar-item>
+      <b-navbar-item style="background-color: #222222">
         <b-field>
           <select
+            class="white--text black"
             placeholder="Select a customer"
             icon="user"
             value="user"
@@ -187,7 +253,9 @@ export default {
         isRead: notification.is_read,
         time: "",
       }));
-      this.unread = this.notifications.filter(notification => !notification.isRead).length
+      this.unread = this.notifications.filter(
+        (notification) => !notification.isRead
+      ).length;
       console.log(this.notifications);
     },
     async updateNotifications() {
@@ -196,7 +264,7 @@ export default {
     href(link) {
       this.$router.push({ path: link });
       this.$router.go();
-    }
+    },
   },
 };
 </script>

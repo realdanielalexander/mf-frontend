@@ -218,7 +218,7 @@
                         <i class="fa fa-paper-plane"></i>Send
                       </button>
                     </div>
-                    <b v-if="comment.replies.length > 0">Replies:</b>
+                    <b v-if="comment.replies && comment.replies.length > 0">Replies:</b>
                     <v-row
                       v-for="reply in comment.replies"
                       :key="reply.id"
@@ -375,7 +375,7 @@
                         <i class="fa fa-paper-plane"></i>Send
                       </button>
                     </div>
-                    <b v-if="review.replies.length > 0">Replies:</b>
+                    <b v-if="review.replies && review.replies.length > 0">Replies:</b>
                     <v-row
                       v-for="reply in review.replies"
                       :key="reply.id"

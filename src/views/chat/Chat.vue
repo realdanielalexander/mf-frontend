@@ -1,5 +1,12 @@
 <template>
   <div style="width: 100%">
+    <div class="align-self-stretch pl-2 py-0 white">
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:divider>
+          <v-icon>mdi-chevron-right</v-icon>
+        </template>
+      </v-breadcrumbs>
+    </div>
     <v-app style="">
       <v-container class="chat-app" style="width: 50%">
         <v-card class="d-flex flex-row">
@@ -101,6 +108,17 @@ export default {
     sendMessage: " ",
     isActive: false,
     windowWidth: window.innerWidth,
+
+    breadcrumbs: [
+      {
+        text: "Home",
+        disabled: false,
+      },
+      {
+        text: "Customer Service",
+        disabled: false,
+      },
+    ],
   }),
 
   methods: {
@@ -110,7 +128,7 @@ export default {
     },
     openMessages(conversation) {
       Vue.set(this, "conversation", conversation);
-      
+
       // Fetch chat with particular person
       this.fetchChats(conversation.id);
     },
@@ -137,10 +155,10 @@ export default {
             messages: [...(this.conversation.messages || []), value],
           })
         );
-        
+
         this.postChat({
           text: e.target.value,
-          customer_id_to: 0
+          customer_id_to: 0,
         });
         e.target.value = "";
       }
@@ -150,7 +168,8 @@ export default {
       var messageJson = JSON.parse(message);
       console.log(messageJson);
       if (
-        parseInt(messageJson.customerIdTo) == this.currentCustomerId && parseInt(messageJson.customerIdFrom) == 0
+        parseInt(messageJson.customerIdTo) == this.currentCustomerId &&
+        parseInt(messageJson.customerIdFrom) == 0
       ) {
         messageJson.fromMe = false;
 
@@ -187,10 +206,10 @@ export default {
       try {
         const res = await axios.get("/chats/" + customerId);
 
-        let resultAddedFromMe = res.data.map(chat => ({
+        let resultAddedFromMe = res.data.map((chat) => ({
           id: chat.id,
           text: chat.text,
-          fromMe: chat.customer_id_from == 0 ? false : true
+          fromMe: chat.customer_id_from == 0 ? false : true,
         }));
 
         Vue.set(

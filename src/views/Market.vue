@@ -1,11 +1,15 @@
 <template>
   <div class="columns is-vcentered is-flex" style="flex-direction: column">
-    <div class="mt-8 is-flex" style="justify-content: space-between;">
-      
-      <div style="padding: 12px 48px" class="title">
-        Millenial Catalog
-      </div>
-      <b-field>
+    <div class="align-self-stretch pl-2 py-0 white">
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:divider>
+          <v-icon>mdi-chevron-right</v-icon>
+        </template>
+      </v-breadcrumbs>
+    </div>
+    <div class="mt-8 d-flex align-self-stretch justify-space-between">
+      <div style="padding: 12px 48px" class="ml-8 title font-weight-bold">Millenial Catalog</div>
+      <b-field class="mr-16">
         <v-select
           :items="categories"
           label="Category"
@@ -14,7 +18,6 @@
           @change="onChange"
         ></v-select>
       </b-field>
-
     </div>
     <div
       v-if="products.length != 0"
@@ -46,14 +49,6 @@
                 <p class="price">
                   Rp. {{ parseInt(product.price).toLocaleString("id-Id") }}
                 </p>
-                <!-- <div> -->
-                <!-- <b-numberinput
-                  min="1"
-                  size="is-small"
-                  controls-position="compact"
-                ></b-numberinput> -->
-                <!-- <b-button type="is-primary" expanded>+ Add to Cart</b-button>
-                </div> -->
               </div>
             </div>
           </div>
@@ -92,6 +87,16 @@ export default {
       products: [],
       categories: [],
       currentCategory: null,
+      breadcrumbs: [
+        {
+          text: "Home",
+          disabled: false,
+        },
+        {
+          text: "Market",
+          disabled: true,
+        },
+      ],
     };
   },
   methods: {
@@ -108,14 +113,12 @@ export default {
       this.categories = this.categoriesAdapter(res.data);
     },
     categoriesAdapter(categories) {
-      var categoriesAdapted = categories.map(
-        category => ({
-          id: category.id, 
-          text: category.name,
-          value: category.id
-          }
-        ));
-      return categoriesAdapted
+      var categoriesAdapted = categories.map((category) => ({
+        id: category.id,
+        text: category.name,
+        value: category.id,
+      }));
+      return categoriesAdapted;
     },
     onChange: function () {
       console.log("change triggerd");
