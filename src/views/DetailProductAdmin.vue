@@ -568,6 +568,9 @@ export default {
         message: comment.reply,
       });
       comment.reply = "";
+      if (!comment.replies) {
+        comment.replies = [];
+      }
       comment.replies.unshift(res.data);
     },
     async postReview() {
@@ -589,6 +592,9 @@ export default {
         message: review.reply,
       });
       review.reply = "";
+      if (!review.replies) {
+        review.replies = [];
+      }
       review.replies.unshift(res.data);
     },
     async updatePrice() {
