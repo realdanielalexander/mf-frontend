@@ -209,9 +209,9 @@
                 <v-card-text>
                   <v-autocomplete
                     v-model="promo"
-                    :items="items"
+                    :items="promoItems"
                     :loading="isLoading"
-                    :search-input.sync="search"
+                    :search-input.sync="searchPromo"
                     hide-no-data
                     hide-selected
                     item-text="code"
@@ -222,7 +222,7 @@
                 </v-card-text>
                 <v-expand-transition>
                   <v-list v-if="promo" class="lighten-3">
-                    <v-list-item v-for="(field, i) in fields" :key="i">
+                    <v-list-item v-for="(field, i) in promoFields" :key="i">
                       <v-list-item-content>
                         <v-list-item-title
                           v-text="field.value"
@@ -240,6 +240,49 @@
                     :disabled="!promo"
                     color="white"
                     @click="promo = null"
+                  >
+                    Clear
+                    <v-icon right> mdi-close-circle </v-icon>
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </b-field>
+            <b-field label="Courier">
+              <v-card>
+                <v-card-text>
+                  <v-autocomplete
+                    v-model="courier"
+                    :items="courierItems"
+                    :loading="isLoading"
+                    :search-input.sync="searchCourier"
+                    hide-no-data
+                    hide-selected
+                    item-text="name"
+                    item-value="id"
+                    placeholder="Start typing to Search"
+                    return-object
+                  ></v-autocomplete>
+                </v-card-text>
+                <v-expand-transition>
+                  <v-list v-if="courier" class="lighten-3">
+                    <v-list-item v-for="(field, i) in courierFields" :key="i">
+                      <v-list-item-content>
+                        <v-list-item-title
+                          v-text="field.value"
+                        ></v-list-item-title>
+                        <v-list-item-subtitle
+                          v-text="field.key"
+                        ></v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-expand-transition>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    :disabled="!courier"
+                    color="white"
+                    @click="courier = null"
                   >
                     Clear
                     <v-icon right> mdi-close-circle </v-icon>
@@ -280,6 +323,7 @@ export default {
       method: "",
       total: null,
       promo: null,
+      courier: null,
 
       // model for table
       quantities: [],
@@ -300,10 +344,17 @@ export default {
       selectedMethod: null,
 
       //autocomplete promo code
-      entries: [],
-      employee: null,
-      search: null,
-      count: 0,
+      promoEntries: [],
+      searchPromo: null,
+      promoCount: 0,
+
+      //autocomplete courier
+      courierEntries: [],
+      searchCourier: null,
+      courierCount: 0,
+
+
+
       message: "",
     };
   },
@@ -316,7 +367,7 @@ export default {
       return "Rp " + parseInt(this.calculateTotal()).toLocaleString("id-ID");
     },
 
-    fields() {
+    promoFields() {
       if (!this.promo) return [];
 
       return Object.keys(this.promo).map((key) => {
@@ -326,19 +377,39 @@ export default {
         };
       });
     },
-    items() {
-      return this.entries.map((entry) => {
+    promoItems() {
+      return this.promoEntries.map((entry) => {
         const code = entry.code;
         const id = entry.id;
 
         return Object.assign({}, entry, { id, code });
       });
     },
+
+    courierFields() {
+      if (!this.courier) return [];
+
+      return Object.keys(this.courier).map((key) => {
+        return {
+          key,
+          value: this.courier[key] || "n/a",
+        };
+      });
+    },
+    courierItems() {
+      return this.courierEntries.map((entry) => {
+        const id = entry.id;
+        // const amount = 'Rp' + entry.amount.toLocaleString("id-ID");
+        const amount = entry.amount;
+
+        return Object.assign({}, entry, { id, amount });
+      });
+    },
   },
   watch: {
-    search() {
+    searchPromo() {
       // Items have already been loaded
-      if (this.items.length > 0) return;
+      if (this.promoItems.length > 0) return;
 
       // Items have already been requested
       if (this.isLoading) return;
@@ -350,8 +421,30 @@ export default {
         .then((res) => res.json())
         .then((res) => {
           console.log(res);
-          this.count = res.length;
-          this.entries = res;
+          this.promoCount = res.length;
+          this.promoEntries = res;
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => (this.isLoading = false));
+    },
+    searchCourier() {
+      // Items have already been loaded
+      if (this.courierItems.length > 0) return;
+
+      // Items have already been requested
+      if (this.isLoading) return;
+
+      this.isLoading = true;
+
+      // Lazily load input items
+      fetch(`http://localhost:8080/couriers`)
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+          this.courierCount = res.length;
+          this.courierEntries = res;
         })
         .catch((err) => {
           console.log(err);
@@ -369,7 +462,17 @@ export default {
       });
 
       if (this.promo && this.message === "") {
-        total = total - this.promo.amount;
+        if(this.promo.percentage) {
+          const amount = total * this.promo.amount/100;
+          console.log(amount);
+          total = total - amount;
+        } else {
+          total = total - this.promo.amount;
+        }
+      }
+
+      if (this.courier && this.message === "") {
+        total = total + this.courier.amount;
       }
 
       return total;

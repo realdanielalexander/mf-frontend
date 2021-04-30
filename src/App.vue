@@ -88,6 +88,20 @@
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        
+
+        <v-list-item two-line>
+          <v-list-item-content class>
+            <v-list-item-title class="d-flex mb-3 align-center">
+              <router-link :to="{ path: '/admin/market' }"
+                ><span class="font-weight-bold body-1 text-truncate"
+                  >Market</span
+                ></router-link
+              >
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
         <!--- Progress -->
       </v-navigation-drawer>
     </div>

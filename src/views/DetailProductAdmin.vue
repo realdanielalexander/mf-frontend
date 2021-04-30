@@ -21,9 +21,22 @@
         </p>
         <hr style="background-color: hsl(0, 0%, 86%); margin: 12px 0" />
 
-        <p v-if="product" class="font-weight-bold flex-grow-1 display-1">
+        <!-- <p v-if="product" class="font-weight-bold flex-grow-1 display-1">
           Rp. {{ parseInt(product.price).toLocaleString("id-ID") }}
-        </p>
+        </p> -->
+        <b-numberinput
+          v-model="product.price"
+          min="1"
+          controls-position="compact"
+        >
+        </b-numberinput>
+        <b-button
+            class="mr-3"
+            type="is-light"
+            @click="updatePrice()"
+            expanded
+            ><strong>Save Price</strong></b-button
+          >
         <p class="font-weight-bold flex-grow-1 description">Variants</p>
 
         <!-- ----------------------------------------------------------------------------- -->
@@ -117,6 +130,7 @@
           <v-tabs v-model="tab">
             <v-tab> Comments </v-tab>
             <v-tab> Reviews </v-tab>
+            <v-tab> Prices </v-tab>
           </v-tabs>
 
           <v-tabs-items v-model="tab" class="">
@@ -170,6 +184,23 @@
                         <v-avatar size="42"></v-avatar>
                         <span>{{ comment.message }}</span>
                       </v-col>
+                      <v-col cols="3"
+                        ><b-button
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                        />
+                        <!-- <b-button
+                          v-if="
+                            this &&
+                            parseInt(comment.customer_id) ==
+                              parseInt(this.$props.currentCustomerId)
+                          "
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                      /> -->
+                      </v-col>
                     </v-row>
                     <div class="reply d-flex">
                       <v-text-field
@@ -216,6 +247,23 @@
                       <v-col cols="6">
                         <v-avatar size="42"></v-avatar>
                         <span>{{ reply.message }}</span>
+                      </v-col>
+                      <v-col cols="3"
+                        ><b-button
+                          @click="deleteCommentReply(reply.id, comment)"
+                          type="is-danger"
+                          icon-right="trash"
+                        />
+                        <!-- <b-button
+                          v-if="
+                            this &&
+                            parseInt(comment.customer_id) ==
+                              parseInt(this.$props.currentCustomerId)
+                          "
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                      /> -->
                       </v-col>
                     </v-row>
                   </div>
@@ -293,6 +341,23 @@
                         <v-avatar size="42"></v-avatar>
                         <span>{{ review.message }}</span>
                       </v-col>
+                      <v-col cols="3"
+                        ><b-button
+                          @click="deleteComment(review.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                        />
+                        <!-- <b-button
+                          v-if="
+                            this &&
+                            parseInt(comment.customer_id) ==
+                              parseInt(this.$props.currentCustomerId)
+                          "
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                      /> -->
+                      </v-col>
                     </v-row>
                     <div class="reply d-flex">
                       <v-text-field
@@ -340,10 +405,73 @@
                         <v-avatar size="42"></v-avatar>
                         <span>{{ reply.message }}</span>
                       </v-col>
+                      <v-col cols="3"
+                        ><b-button
+                          @click="deleteReviewReply(reply.id, review)"
+                          type="is-danger"
+                          icon-right="trash"
+                        />
+                        <!-- <b-button
+                          v-if="
+                            this &&
+                            parseInt(comment.customer_id) ==
+                              parseInt(this.$props.currentCustomerId)
+                          "
+                          @click="deleteComment(comment.id)"
+                          type="is-danger"
+                          icon-right="trash"
+                      /> -->
+                      </v-col>
                     </v-row>
                   </div>
                 </v-col>
               </v-row>
+            </v-tab-item>
+
+            <v-tab-item>
+              <div class="content" style="margin-bottom: 0">
+                <b-table
+                  :data="prices ? prices : []"
+                  :hoverable="true"
+                  :loading="isLoading"
+                >
+                  <b-table-column
+                    field="id"
+                    label="Id"
+                    width="5"
+                    numeric
+                    v-slot="props"
+                  >
+                    {{ props.row.id }}
+                  </b-table-column>
+
+                  <b-table-column
+                    field="Price"
+                    width="40"
+                    label="Price"
+                    v-slot="props"
+                  >
+                    {{ props.row.price }}
+                  </b-table-column>
+
+                  <b-table-column
+                    field="Change Date"
+                    label="Change Date"
+                    width="40"
+                    v-slot="props"
+                  >
+                    {{ props.row.created_at }}
+                  </b-table-column>
+
+                  <template slot="empty">
+                    <section class="section">
+                      <div class="content has-text-grey has-text-centered">
+                        <p>Prices is empty!</p>
+                      </div>
+                    </section>
+                  </template>
+                </b-table>
+              </div>
             </v-tab-item>
           </v-tabs-items>
         </div>

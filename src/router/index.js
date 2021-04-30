@@ -6,8 +6,10 @@ Vue.use(VueRouter);
 // add component
 import Home from '../views/Home.vue';
 import Market from '../views/Market.vue';
+import MarketAdmin from '../views/MarketAdmin.vue';
 import Cart from '../views/Cart.vue';
 import DetailProduct from '../views/DetailProduct.vue';
+import DetailProductAdmin from '../views/DetailProductAdmin.vue';
 import Signup from '../views/Signup.vue';
 import Wish from '../views/Wish.vue';
 import Transactions from '../views/Transactions.vue';
@@ -91,9 +93,14 @@ const routes = [
     component: Arrived,
   },
   {
-    path: 'admin/product/:categoryId/:productId',
+    path: '/admin/market',
+    name: 'marketAdmin',
+    component: MarketAdmin,
+  },
+  {
+    path: '/admin/product/:categoryId/:productId',
     name: 'detailProductAdmin',
-    component: DetailProduct,
+    component: DetailProductAdmin,
   },
 ];
 
