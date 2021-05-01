@@ -38,7 +38,7 @@ Vue.use(VueAxios, Axios);
 Vue.use(LoadScript);
 
 Vue.prototype.$axios = Axios;
-Vue.axios.defaults.baseURL = `http://localhost:8080`;
+Vue.axios.defaults.baseURL = process.env.VUE_APP_BASE_URL;
 
 new Vue({
   vuetify,
